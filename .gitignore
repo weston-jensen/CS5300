@@ -6,3 +6,4 @@ parser.tab.cpp
 *.exe
 build/
 saved/
+TestFiles/
