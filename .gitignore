@@ -1,0 +1,8 @@
+lex.yy.cpp
+parser.tab.hpp
+Results.txt 
+launcher.exe
+parser.tab.cpp
+*.exe
+build/
+saved/

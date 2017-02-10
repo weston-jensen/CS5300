@@ -1,0 +1,1148 @@
+ 
+======================================================================================================
+Now Using Test File: /home/wjensen/Coding_Projects/CS5300/CS5300/TestFiles/AllocationTest.cpp
+======================================================================================================
+Unexpected token #
+ERROR! syntax error, unexpected IDENT_SYM, expecting BEGIN_SYM Line: 1
+======================================================================================================
+Now Using Test File: /home/wjensen/Coding_Projects/CS5300/CS5300/TestFiles/Boolean.cpsl
+======================================================================================================
+*IdentList Ident
+*SimpleType
+*Type: SimpleType
+*VarDecl
+*IdentList Ident
+*SimpleType
+*Type: SimpleType
+*VarDecl
+*LValue
+*LValue
+*LValue
+*Assignment
+*Stm: Assignment
+*StatementSeq
+*LValue
+*LValue
+*LValue
+*Assignment
+*Stm: Assignment
+*StatementSeq ; Statement
+Unexpected token "
+*LValue
+*LValue
+Unexpected token "
+ERROR! syntax error, unexpected COMMA_SYM Line: 8
+======================================================================================================
+Now Using Test File: /home/wjensen/Coding_Projects/CS5300/CS5300/TestFiles/ExpressionTest.cpp
+======================================================================================================
+Unexpected token #
+ERROR! syntax error, unexpected IDENT_SYM, expecting BEGIN_SYM Line: 1
+======================================================================================================
+Now Using Test File: /home/wjensen/Coding_Projects/CS5300/CS5300/TestFiles/StatementTest.cpp
+======================================================================================================
+Unexpected token #
+ERROR! syntax error, unexpected IDENT_SYM, expecting BEGIN_SYM Line: 1
+======================================================================================================
+Now Using Test File: /home/wjensen/Coding_Projects/CS5300/CS5300/TestFiles/array_index.cpsl
+======================================================================================================
+Unexpected token 0
+ERROR! syntax error, unexpected PLUS_SYM Line: 5
+======================================================================================================
+Now Using Test File: /home/wjensen/Coding_Projects/CS5300/CS5300/TestFiles/array_simple.cpsl
+======================================================================================================
+*Int
+*ConstDecl
+*Int
+*ConstDecl
+*LValue
+*LValue
+*LValue
+*LValue
+*SimpleType
+*Type: SimpleType
+*ArrayType
+*Type: ARRAY_SYMType
+*TypeDecl
+*IdentList Ident
+*SimpleType
+*Type: SimpleType
+*VarDecl
+*IdentList Ident
+*SimpleType
+*Type: SimpleType
+*VarDecl
+*LValue
+*Int
+*Assignment
+*Stm: Assignment
+*StatementSeq
+*LValue
+*Int
+*LValue
+*LValue
+*LValue
+*Assignment
+*Stm: Assignment
+*StatementSeq ; Statement
+*LValue
+*Int
+*LValue
+*LValue
+*Int
+*LValue
+*LValue
+*LValue
+*LValue
+*exp + exp
+*Assignment
+*Stm: Assignment
+*StatementSeq ; Statement
+Unexpected token "
+Unexpected token \
+*LValue
+*LValue
+*WriteArgs Exp
+ERROR! syntax error, unexpected IDENT_SYM, expecting COMMA_SYM or RPAREN_SYM Line: 20
+======================================================================================================
+Now Using Test File: /home/wjensen/Coding_Projects/CS5300/CS5300/TestFiles/array_sum.cpsl
+======================================================================================================
+*Int
+*ConstDecl
+*Int
+*LValue
+*LValue
+*SimpleType
+*Type: SimpleType
+*ArrayType
+*Type: ARRAY_SYMType
+*TypeDecl
+*IdentList Ident
+*SimpleType
+*Type: SimpleType
+*VarDecl
+*IdentList Ident
+*SimpleType
+*Type: SimpleType
+*VarDecl
+*Function VAR
+*IdentList Ident
+*SimpleType
+*Type: SimpleType
+*FormalParameter
+*Empty FormalParameters
+*optional_FormalParameters
+*SimpleType
+*Type: SimpleType
+*IdentList Ident
+*IdentList , Ident
+*SimpleType
+*Type: SimpleType
+*VarDecl
+*LValue
+Unexpected token 0
+ERROR! syntax error, unexpected SEMICOLON_SYM Line: 14
+======================================================================================================
+Now Using Test File: /home/wjensen/Coding_Projects/CS5300/CS5300/TestFiles/assignment.cpsl
+======================================================================================================
+*IdentList Ident
+*SimpleType
+*Type: SimpleType
+*VarDecl
+*LValue
+*Int
+*Assignment
+*Stm: Assignment
+*StatementSeq
+*Stm: NullStatement
+*StatementSeq ; Statement
+*Block
+*Program
+======================================================================================================
+Now Using Test File: /home/wjensen/Coding_Projects/CS5300/CS5300/TestFiles/binary_tree.cpsl
+======================================================================================================
+*Int
+*ConstDecl
+*charconst
+*ConstDecl
+*FieldDeclEmpty
+*IdentList Ident
+*SimpleType
+*Type: SimpleType
+*FieldDecl
+*FieldDecls FieldDecl
+*IdentList Ident
+*SimpleType
+*Type: SimpleType
+*FieldDecl
+*FieldDecls FieldDecl
+*RecordType
+*Type: RecordType
+*TypeDecl
+*IdentList Ident
+*Int
+*LValue
+*LValue
+*SimpleType
+*Type: SimpleType
+*ArrayType
+*Type: ARRAY_SYMType
+*VarDecl
+*IdentList Ident
+*Int
+*LValue
+*LValue
+*SimpleType
+*Type: SimpleType
+*ArrayType
+*Type: ARRAY_SYMType
+*VarDecl
+*IdentList Ident
+*SimpleType
+*Type: SimpleType
+*VarDecl
+*optional_FormalParameters Empty
+*IdentList Ident
+*SimpleType
+*Type: SimpleType
+*VarDecl
+*LValue
+*LValue
+Unexpected token 0
+ERROR! syntax error, unexpected SEMICOLON_SYM Line: 25
+======================================================================================================
+Now Using Test File: /home/wjensen/Coding_Projects/CS5300/CS5300/TestFiles/checkers.cpsl
+======================================================================================================
+*IdentList Ident
+Unexpected token 0
+ERROR! syntax error, unexpected COLON_SYM Line: 2
+======================================================================================================
+Now Using Test File: /home/wjensen/Coding_Projects/CS5300/CS5300/TestFiles/control_statements.cpsl
+======================================================================================================
+*Int
+*ConstDecl
+*IdentList Ident
+*IdentList , Ident
+*IdentList , Ident
+*SimpleType
+*Type: SimpleType
+*VarDecl
+*IdentList Ident
+*IdentList , Ident
+*IdentList , Ident
+*IdentList , Ident
+*IdentList , Ident
+*IdentList , Ident
+*SimpleType
+*Type: SimpleType
+*VarDecl
+*LValue
+*Int
+*Assignment
+*Stm: Assignment
+*StatementSeq
+*LValue
+*Int
+*Assignment
+*Stm: Assignment
+*StatementSeq ; Statement
+Unexpected token "
+*LValue
+*LValue
+*Int
+*exp = exp
+*WriteArgs Exp
+ERROR! syntax error, unexpected SEMICOLON_SYM, expecting COMMA_SYM or RPAREN_SYM Line: 13
+======================================================================================================
+Now Using Test File: /home/wjensen/Coding_Projects/CS5300/CS5300/TestFiles/expressions.cpsl
+======================================================================================================
+*IdentList Ident
+*IdentList , Ident
+*SimpleType
+*Type: SimpleType
+*VarDecl
+*String
+*WriteArgs Exp
+*Int
+*Int
+*exp + exp
+*WriteArgs , exp
+*charconst
+*WriteArgs , exp
+*WriteStatement
+*Stm: Write
+*StatementSeq
+*String
+*WriteArgs Exp
+*Int
+*Int
+*exp * exp
+*WriteArgs , exp
+*charconst
+*WriteArgs , exp
+*WriteStatement
+*Stm: Write
+*StatementSeq ; Statement
+*String
+*WriteArgs Exp
+*Int
+*Int
+*exp / exp
+*WriteArgs , exp
+*charconst
+*WriteArgs , exp
+*WriteStatement
+*Stm: Write
+*StatementSeq ; Statement
+*String
+*WriteArgs Exp
+*Int
+*Int
+*exp -  exp
+*WriteArgs , exp
+*charconst
+*WriteArgs , exp
+*WriteStatement
+*Stm: Write
+*StatementSeq ; Statement
+Unexpected token "
+*LValue
+*LValue
+*WriteArgs Exp
+ERROR! syntax error, unexpected IDENT_SYM, expecting COMMA_SYM or RPAREN_SYM Line: 8
+======================================================================================================
+Now Using Test File: /home/wjensen/Coding_Projects/CS5300/CS5300/TestFiles/factorial.cpsl
+======================================================================================================
+*IdentList Ident
+*IdentList , Ident
+*SimpleType
+*Type: SimpleType
+*VarDecl
+*LValue
+*Int
+*Assignment
+*Stm: Assignment
+*StatementSeq
+*Int
+*ForHead
+*Int
+*ToHead To
+*LValue
+*LValue
+*LValue
+*LValue
+*LValue
+*exp * exp
+*Assignment
+*Stm: Assignment
+*StatementSeq
+*LValue
+*LValue
+*WriteArgs Exp
+*charconst
+*WriteArgs , exp
+*LValue
+*LValue
+*WriteArgs , exp
+*WriteStatement
+*Stm: Write
+*StatementSeq ; Statement
+*Stm: NullStatement
+*StatementSeq ; Statement
+*ForStatement
+*Stm: For
+*StatementSeq ; Statement
+*Stm: NullStatement
+*StatementSeq ; Statement
+*Block
+*Program
+======================================================================================================
+Now Using Test File: /home/wjensen/Coding_Projects/CS5300/CS5300/TestFiles/fibonacci.cpsl
+======================================================================================================
+*IdentList Ident
+*IdentList , Ident
+*IdentList , Ident
+*IdentList , Ident
+*IdentList , Ident
+*SimpleType
+*Type: SimpleType
+*VarDecl
+*Function Nothing
+*IdentList Ident
+*SimpleType
+*Type: SimpleType
+*FormalParameter
+*Empty FormalParameters
+*optional_FormalParameters
+*SimpleType
+*Type: SimpleType
+*IdentList Ident
+*IdentList , Ident
+*SimpleType
+*Type: SimpleType
+*VarDecl
+*LValue
+*LValue
+Unexpected token 0
+ERROR! syntax error, unexpected THEN_SYM Line: 6
+======================================================================================================
+Now Using Test File: /home/wjensen/Coding_Projects/CS5300/CS5300/TestFiles/for_down.cpsl
+======================================================================================================
+*IdentList Ident
+*SimpleType
+*Type: SimpleType
+*VarDecl
+*Int
+*ForHead
+*Int
+*ToHead Downto
+*LValue
+*LValue
+*WriteArgs Exp
+Unexpected token "
+Unexpected token \
+Unexpected token "
+*LValue
+*LValue
+*WriteArgs , exp
+*WriteStatement
+*Stm: Write
+*StatementSeq
+*Stm: NullStatement
+*StatementSeq ; Statement
+*ForStatement
+*Stm: For
+*StatementSeq
+*Stm: NullStatement
+*StatementSeq ; Statement
+*Block
+ERROR! syntax error, unexpected $end, expecting DOT_SYM Line: 10
+======================================================================================================
+Now Using Test File: /home/wjensen/Coding_Projects/CS5300/CS5300/TestFiles/for_to.cpsl
+======================================================================================================
+*IdentList Ident
+*SimpleType
+*Type: SimpleType
+*VarDecl
+Unexpected token 0
+ERROR! syntax error, unexpected TO_SYM Line: 6
+======================================================================================================
+Now Using Test File: /home/wjensen/Coding_Projects/CS5300/CS5300/TestFiles/function_no_args.cpsl
+======================================================================================================
+*optional_FormalParameters Empty
+*SimpleType
+*Type: SimpleType
+*Int
+*ReturnStatement
+*Stm: Return
+*StatementSeq
+*Stm: NullStatement
+*StatementSeq ; Statement
+*Block
+*Body
+*FunctionDecl
+*optional_Arguments Empty
+*ProcedureCall
+*Stm: Procedure
+*StatementSeq
+*Stm: NullStatement
+*StatementSeq ; Statement
+*Block
+*Program
+======================================================================================================
+Now Using Test File: /home/wjensen/Coding_Projects/CS5300/CS5300/TestFiles/function_procedure.cpsl
+======================================================================================================
+*Int
+*ConstDecl
+*Int
+*ConstDecl
+*IdentList Ident
+*SimpleType
+*Type: SimpleType
+*VarDecl
+*optional_FormalParameters Empty
+*String
+*WriteArgs Exp
+*WriteStatement
+*Stm: Write
+*StatementSeq
+*Stm: NullStatement
+*StatementSeq ; Statement
+*Block
+*Body
+ProcedureDecl Body
+*optional_FormalParameters Empty
+Unexpected token "
+*LValue
+*LValue
+*WriteArgs Exp
+ERROR! syntax error, unexpected IDENT_SYM, expecting COMMA_SYM or RPAREN_SYM Line: 15
+======================================================================================================
+Now Using Test File: /home/wjensen/Coding_Projects/CS5300/CS5300/TestFiles/function_with_args.cpsl
+======================================================================================================
+*IdentList Ident
+*IdentList , Ident
+*SimpleType
+*Type: SimpleType
+*VarDecl
+*Function Nothing
+*IdentList Ident
+*IdentList , Ident
+*SimpleType
+*Type: SimpleType
+*FormalParameter
+*Empty FormalParameters
+*optional_FormalParameters
+*SimpleType
+*Type: SimpleType
+*LValue
+*LValue
+*LValue
+*LValue
+*exp + exp
+*ReturnStatement
+*Stm: Return
+*StatementSeq
+*Stm: NullStatement
+*StatementSeq ; Statement
+*Block
+*Body
+*FunctionDecl
+*LValue
+*Int
+*Assignment
+*Stm: Assignment
+*StatementSeq
+*LValue
+*Int
+*Assignment
+*Stm: Assignment
+*StatementSeq ; Statement
+Unexpected token "
+*LValue
+*LValue
+*LValue
+*LValue
+*exp + exp
+*WriteArgs Exp
+ERROR! syntax error, unexpected COLON_SYM, expecting COMMA_SYM or RPAREN_SYM Line: 12
+======================================================================================================
+Now Using Test File: /home/wjensen/Coding_Projects/CS5300/CS5300/TestFiles/game_form.cpsl
+======================================================================================================
+*Int
+*ConstDecl
+*FieldDeclEmpty
+*IdentList Ident
+*IdentList , Ident
+*SimpleType
+*Type: SimpleType
+*FieldDecl
+*FieldDecls FieldDecl
+*IdentList Ident
+*SimpleType
+*Type: SimpleType
+*FieldDecl
+*FieldDecls FieldDecl
+*RecordType
+*Type: RecordType
+*TypeDecl
+*IdentList Ident
+*Int
+*LValue
+*LValue
+*SimpleType
+*Type: SimpleType
+*ArrayType
+*Type: ARRAY_SYMType
+*VarDecl
+*IdentList Ident
+*SimpleType
+*Type: SimpleType
+*VarDecl
+*optional_FormalParameters Empty
+*SimpleType
+*Type: SimpleType
+*IdentList Ident
+*SimpleType
+*Type: SimpleType
+*VarDecl
+Unexpected token "
+*LValue
+*LValue
+*WriteArgs Exp
+ERROR! syntax error, unexpected IDENT_SYM, expecting COMMA_SYM or RPAREN_SYM Line: 21
+======================================================================================================
+Now Using Test File: /home/wjensen/Coding_Projects/CS5300/CS5300/TestFiles/hanoi.cpsl
+======================================================================================================
+*IdentList Ident
+*SimpleType
+*Type: SimpleType
+*VarDecl
+*Function VAR
+*IdentList Ident
+*SimpleType
+*Type: SimpleType
+*FormalParameter
+*Empty FormalParameters
+*Function Nothing
+*IdentList Ident
+*IdentList , Ident
+*IdentList , Ident
+*SimpleType
+*Type: SimpleType
+*FormalParameter
+*FormalParameters
+*optional_FormalParameters
+ERROR! syntax error, unexpected BEGIN_SYM, expecting SEMICOLON_SYM Line: 4
+======================================================================================================
+Now Using Test File: /home/wjensen/Coding_Projects/CS5300/CS5300/TestFiles/ifelseif_nested.cpsl
+======================================================================================================
+*IdentList Ident
+*IdentList , Ident
+*SimpleType
+*Type: SimpleType
+*VarDecl
+*LValue
+*Int
+*Assignment
+*Stm: Assignment
+*StatementSeq
+*LValue
+*Int
+*Assignment
+*Stm: Assignment
+*StatementSeq ; Statement
+*LValue
+*LValue
+*Int
+*exp < exp
+*( exp )
+*IfHead
+Unexpected token "
+*LValue
+*LValue
+*WriteArgs Exp
+ERROR! syntax error, unexpected IDENT_SYM, expecting COMMA_SYM or RPAREN_SYM Line: 10
+======================================================================================================
+Now Using Test File: /home/wjensen/Coding_Projects/CS5300/CS5300/TestFiles/ifelseif_simple.cpsl
+======================================================================================================
+*IdentList Ident
+*SimpleType
+*Type: SimpleType
+*VarDecl
+*LValue
+*Int
+*Assignment
+*Stm: Assignment
+*StatementSeq
+*LValue
+*LValue
+*Int
+*exp < exp
+*( exp )
+*IfHead
+Unexpected token "
+*LValue
+*LValue
+*WriteArgs Exp
+ERROR! syntax error, unexpected IDENT_SYM, expecting COMMA_SYM or RPAREN_SYM Line: 9
+======================================================================================================
+Now Using Test File: /home/wjensen/Coding_Projects/CS5300/CS5300/TestFiles/lexical_test.cpsl
+======================================================================================================
+ERROR! syntax error, unexpected IDENT_SYM, expecting BEGIN_SYM Line: 1
+======================================================================================================
+Now Using Test File: /home/wjensen/Coding_Projects/CS5300/CS5300/TestFiles/number_guessing_game.cpsl
+======================================================================================================
+*IdentList Ident
+*SimpleType
+*Type: SimpleType
+*VarDecl
+*IdentList Ident
+*SimpleType
+*Type: SimpleType
+*VarDecl
+*IdentList Ident
+*SimpleType
+*Type: SimpleType
+*VarDecl
+*IdentList Ident
+*SimpleType
+*Type: SimpleType
+*VarDecl
+*IdentList Ident
+*SimpleType
+*Type: SimpleType
+*VarDecl
+Unexpected token "
+*LValue
+*LValue
+*WriteArgs Exp
+ERROR! syntax error, unexpected TO_SYM, expecting COMMA_SYM or RPAREN_SYM Line: 9
+======================================================================================================
+Now Using Test File: /home/wjensen/Coding_Projects/CS5300/CS5300/TestFiles/personnel.cpsl
+======================================================================================================
+*Int
+*ConstDecl
+*Int
+*ConstDecl
+*Int
+*LValue
+*LValue
+*SimpleType
+*Type: SimpleType
+*ArrayType
+*Type: ARRAY_SYMType
+*TypeDecl
+*FieldDeclEmpty
+*IdentList Ident
+*SimpleType
+*Type: SimpleType
+*FieldDecl
+*FieldDecls FieldDecl
+*IdentList Ident
+*SimpleType
+*Type: SimpleType
+*FieldDecl
+*FieldDecls FieldDecl
+*RecordType
+*Type: RecordType
+*TypeDecl
+*IdentList Ident
+*Int
+*LValue
+*LValue
+*SimpleType
+*Type: SimpleType
+*ArrayType
+*Type: ARRAY_SYMType
+*VarDecl
+*IdentList Ident
+*SimpleType
+*Type: SimpleType
+*VarDecl
+*Function VAR
+*IdentList Ident
+*IdentList , Ident
+*SimpleType
+*Type: SimpleType
+*FormalParameter
+*Empty FormalParameters
+*optional_FormalParameters
+*SimpleType
+*Type: SimpleType
+*IdentList Ident
+*SimpleType
+*Type: SimpleType
+*VarDecl
+*Int
+*ForHead
+*LValue
+*LValue
+*ToHead To
+*LValue
+*LValue
+*LValue
+*LValue
+*LValue
+*LValue
+*LValue
+*LValue
+*LValue
+*LValue
+*exp > exp
+*IfHead
+*LValue
+*LValue
+*ReturnStatement
+*Stm: Return
+*StatementSeq
+*Stm: NullStatement
+*StatementSeq ; Statement
+*ThenPart
+*ElseIfList empty
+*LValue
+*LValue
+*LValue
+*LValue
+*LValue
+*LValue
+*LValue
+*LValue
+*LValue
+*LValue
+*exp < exp
+*ElseIfHead
+*LValue
+*LValue
+*ReturnStatement
+*Stm: Return
+*StatementSeq
+*Stm: NullStatement
+*StatementSeq ; Statement
+*ThenPart
+*ElseIfList
+*ElseClause
+*IfStatement
+*Stm: If
+*StatementSeq
+*Stm: NullStatement
+*StatementSeq ; Statement
+*ForStatement
+*Stm: For
+*StatementSeq
+*LValue
+*LValue
+*ReturnStatement
+*Stm: Return
+*StatementSeq ; Statement
+*Stm: NullStatement
+*StatementSeq ; Statement
+*Block
+*Body
+*FunctionDecl
+*Function Nothing
+*IdentList Ident
+*IdentList , Ident
+*SimpleType
+*Type: SimpleType
+*FormalParameter
+*Empty FormalParameters
+*optional_FormalParameters
+*SimpleType
+*Type: SimpleType
+*LValue
+*LValue
+*LValue
+*LValue
+*exp > exp
+*ReturnStatement
+*Stm: Return
+*StatementSeq
+*Stm: NullStatement
+*StatementSeq ; Statement
+*Block
+*Body
+*FunctionDecl
+*optional_FormalParameters Empty
+*SimpleType
+*Type: SimpleType
+*IdentList Ident
+*SimpleType
+*Type: SimpleType
+*VarDecl
+*IdentList Ident
+*SimpleType
+*Type: SimpleType
+*VarDecl
+*IdentList Ident
+*SimpleType
+*Type: SimpleType
+*VarDecl
+Unexpected token "
+*LValue
+*LValue
+*WriteArgs Exp
+ERROR! syntax error, unexpected IDENT_SYM, expecting COMMA_SYM or RPAREN_SYM Line: 44
+======================================================================================================
+Now Using Test File: /home/wjensen/Coding_Projects/CS5300/CS5300/TestFiles/procedure_no_args.cpsl
+======================================================================================================
+*optional_FormalParameters Empty
+*String
+*WriteArgs Exp
+*WriteStatement
+*Stm: Write
+*StatementSeq
+*Stm: NullStatement
+*StatementSeq ; Statement
+*Block
+*Body
+ProcedureDecl Body
+*optional_Arguments Empty
+*ProcedureCall
+*Stm: Procedure
+*StatementSeq
+*optional_Arguments Empty
+*ProcedureCall
+*Stm: Procedure
+*StatementSeq ; Statement
+*Stm: NullStatement
+*StatementSeq ; Statement
+*Block
+*Program
+======================================================================================================
+Now Using Test File: /home/wjensen/Coding_Projects/CS5300/CS5300/TestFiles/procedure_with_args.cpsl
+======================================================================================================
+*IdentList Ident
+*SimpleType
+*Type: SimpleType
+*VarDecl
+*Function Nothing
+*IdentList Ident
+*SimpleType
+*Type: SimpleType
+*FormalParameter
+*Empty FormalParameters
+*optional_FormalParameters
+Unexpected token "
+Unexpected token "
+*LValue
+*LValue
+*LValue
+*LValue
+*exp + exp
+*String
+*exp + exp
+*WriteArgs Exp
+*WriteStatement
+*Stm: Write
+*StatementSeq
+*Stm: NullStatement
+*StatementSeq ; Statement
+*Block
+*Body
+ProcedureDecl Body
+*LValue
+*Int
+*Assignment
+*Stm: Assignment
+*StatementSeq
+*LValue
+*LValue
+*Arguments exp
+*optional_Arguments
+*ProcedureCall
+*Stm: Procedure
+*StatementSeq ; Statement
+*Stm: NullStatement
+*StatementSeq ; Statement
+*Block
+*Program
+======================================================================================================
+Now Using Test File: /home/wjensen/Coding_Projects/CS5300/CS5300/TestFiles/quicksort.cpsl
+======================================================================================================
+Unexpected token 0
+ERROR! syntax error, unexpected SEMICOLON_SYM Line: 5
+======================================================================================================
+Now Using Test File: /home/wjensen/Coding_Projects/CS5300/CS5300/TestFiles/record.cpsl
+======================================================================================================
+*FieldDeclEmpty
+*IdentList Ident
+*IdentList , Ident
+*IdentList , Ident
+*SimpleType
+*Type: SimpleType
+*FieldDecl
+*FieldDecls FieldDecl
+*RecordType
+*Type: RecordType
+*TypeDecl
+*IdentList Ident
+*SimpleType
+*Type: SimpleType
+*VarDecl
+*IdentList Ident
+*SimpleType
+*Type: SimpleType
+*VarDecl
+*IdentList Ident
+*IdentList , Ident
+*IdentList , Ident
+*SimpleType
+*Type: SimpleType
+*VarDecl
+*LValue
+*Int
+*Assignment
+*Stm: Assignment
+*StatementSeq
+*LValue
+*LValue
+*Int
+*Assignment
+*Stm: Assignment
+*StatementSeq ; Statement
+*LValue
+*LValue
+*LValue
+*LValue
+*Assignment
+*Stm: Assignment
+*StatementSeq ; Statement
+*LValue
+*LValue
+*WriteArgs Exp
+Unexpected token "
+ERROR! syntax error, unexpected EQ_SYM Line: 26
+======================================================================================================
+Now Using Test File: /home/wjensen/Coding_Projects/CS5300/CS5300/TestFiles/repeat.cpsl
+======================================================================================================
+*IdentList Ident
+*SimpleType
+*Type: SimpleType
+*VarDecl
+*LValue
+Unexpected token 0
+ERROR! syntax error, unexpected SEMICOLON_SYM Line: 6
+======================================================================================================
+Now Using Test File: /home/wjensen/Coding_Projects/CS5300/CS5300/TestFiles/sorttest.cpsl
+======================================================================================================
+*Int
+*ConstDecl
+*Function Nothing
+*IdentList Ident
+*SimpleType
+*Type: SimpleType
+*FormalParameter
+*Empty FormalParameters
+*optional_FormalParameters
+*SimpleType
+*Type: SimpleType
+*FunctionDecl
+*Function Nothing
+*IdentList Ident
+*SimpleType
+*Type: SimpleType
+*FormalParameter
+*Empty FormalParameters
+*optional_FormalParameters
+*SimpleType
+*Type: SimpleType
+*LValue
+*LValue
+Unexpected token 0
+ERROR! syntax error, unexpected THEN_SYM Line: 7
+======================================================================================================
+Now Using Test File: /home/wjensen/Coding_Projects/CS5300/CS5300/TestFiles/tictactoe.cpsl
+======================================================================================================
+*IdentList Ident
+*Int
+*Int
+*SimpleType
+*Type: SimpleType
+*ArrayType
+*Type: ARRAY_SYMType
+*VarDecl
+*IdentList Ident
+*IdentList , Ident
+*IdentList , Ident
+*SimpleType
+*Type: SimpleType
+*VarDecl
+*Function Nothing
+*IdentList Ident
+*IdentList , Ident
+*SimpleType
+*Type: SimpleType
+*FormalParameter
+*Empty FormalParameters
+*optional_FormalParameters
+*SimpleType
+*Type: SimpleType
+*LValue
+*LValue
+*LValue
+*Int
+*exp * exp
+*( exp )
+*Int
+*exp precent exp
+*Assignment
+*Stm: Assignment
+*StatementSeq
+*LValue
+*LValue
+*LValue
+*LValue
+*LValue
+*LValue
+*exp -  exp
+*Int
+*exp + exp
+*( exp )
+*exp precent exp
+*LValue
+*LValue
+*exp + exp
+*ReturnStatement
+*Stm: Return
+*StatementSeq ; Statement
+*Stm: NullStatement
+*StatementSeq ; Statement
+*Block
+*Body
+*FunctionDecl
+*optional_FormalParameters Empty
+*IdentList Ident
+*SimpleType
+*Type: SimpleType
+*VarDecl
+*Int
+*ForHead
+*Int
+*ToHead To
+*LValue
+*LValue
+*LValue
+*LValue
+*charconst
+*Assignment
+*Stm: Assignment
+*StatementSeq
+*Stm: NullStatement
+*StatementSeq ; Statement
+*ForStatement
+*Stm: For
+*StatementSeq
+*LValue
+*Int
+*Assignment
+*Stm: Assignment
+*StatementSeq ; Statement
+*Stm: NullStatement
+*StatementSeq ; Statement
+*Block
+*Body
+ProcedureDecl Body
+*optional_FormalParameters Empty
+*charconst
+*WriteArgs Exp
+*LValue
+*Int
+*LValue
+*LValue
+*WriteArgs , exp
+Unexpected token "
+ERROR! syntax error, unexpected OR_SYM Line: 22
+======================================================================================================
+Now Using Test File: /home/wjensen/Coding_Projects/CS5300/CS5300/TestFiles/while.cpsl
+======================================================================================================
+*IdentList Ident
+*IdentList , Ident
+*SimpleType
+*Type: SimpleType
+*VarDecl
+*LValue
+*Int
+*Assignment
+*Stm: Assignment
+*StatementSeq
+*LValue
+*LValue
+Unexpected token 0
+ERROR! syntax error, unexpected RPAREN_SYM Line: 8
+======================================================================================================
+Now Using Test File: /home/wjensen/Coding_Projects/CS5300/CS5300/TestFiles/while_nested.cpsl
+======================================================================================================
+*IdentList Ident
+*IdentList , Ident
+*SimpleType
+*Type: SimpleType
+*VarDecl
+*LValue
+*Int
+*Assignment
+*Stm: Assignment
+*StatementSeq
+*LValue
+Unexpected token 0
+ERROR! syntax error, unexpected SEMICOLON_SYM Line: 7
+======================================================================================================
