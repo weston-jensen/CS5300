@@ -1,18 +1,42 @@
 cmake_minimum_required(VERSION 2.8)
 project(cpsl)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+
 find_package(BISON)
 find_package(FLEX)
 
-bison_target(CpslParser parser.y parser.cpp)
-flex_target(CpslScanner scanner.l scanner.cpp)
-add_flex_bison_dependency(CpslScanner CpslParser)
+flex_target(scanner scanner.lex ${CMAKE_CURRENT_BINARY_DIR}/scanner.cpp)
+bison_target(parser parser.y ${CMAKE_CURRENT_BINARY_DIR}/parser.cpp
+        COMPILE_FLAGS "-d  -v --report-file=${CMAKE_CURRENT_BINARY_DIR}/bison.output")
 
-set(EXTRA_COMPILE_FLAGS "-g -std=c++0x")
-#set(LCOV_FLAGS "--coverage")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${EXTRA_COMPILE_FLAGS} ${LCOV_FLAGS}")
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${LCOV_FLAGS}")
+set(COMMON_SOURCES
+    Array_Type.hpp
+    Array_Type.cpp
+    Constant.hpp
+    Constant.cpp
+    Expressions.cpp
+    Expressions.hpp
+    Record.hpp
+    Record.cpp
+    Symbol.hpp
+    symbol_table.cpp
+    symbol_table.hpp
+    TreeParser.cpp
+    TreeParser.hpp
+    Type.hpp
+    Type.cpp
+    Var.hpp
+    Var.cpp)
 
-#set(main_srcs main.cpp)
+set(COMPILER_SOURCES
+    main.cpp
+    scanner
+    parser)
 
-#add_executable(cpsl ${main_srcs})
+include_directories(
+        ${CMAKE_CURRENT_BINARY_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR})
+
+add_executable(cpsl ${COMMON_SOURCES} ${COMPILER_SOURCES})

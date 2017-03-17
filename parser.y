@@ -1,75 +1,102 @@
- %{
-#include "Globals.h"
+%{
+#include "Expressions.hpp"
+#include "symbol_table.hpp"
+#include "Constant.hpp"
+#include "Type.hpp"
+#include "Array_Type.hpp"
+#include "TreeParser.hpp"
+#include <algorithm>
+
 #include <iostream>
 #include <fstream>
+#include <memory>
+#include <string>
+#include <vector>
 
-extern int yyparse();
+
+extern int num_lines;
+extern void yyerror(const char *str);
 extern int yylex();
 extern int yylineno;
 extern char* yytext;
-//extern int num_lines;
-void yyerror(const char*);
 %}
+
+%union
+{
+  int intVal;
+  char *strVal;
+  std::vector<std::pair<std::vector<std::string>, std::shared_ptr<Type>>> *typeList;
+  std::vector<std::string> *identList;
+  std::vector<Expression> *exprList;
+  Type *typeVal;
+  Array_Type *arrVal;
+  Record *recVal;
+  Constant *constVal;
+  Expression *expr;
+  void *none;
+}
+
 
  /* TOKENS */
 %error-verbose
-%token ARRAY_SYM
-%token ASSIGN_SYM 
-%token BEGIN_SYM
-%token CHARCONST_SYM
-%token CHR_SYM
-%token COLON_SYM
-%token COMMA_SYM 
-%token CONST_SYM 
-%token DIV_SYM 
-%token DO_SYM 
-%token DOT_SYM 
-%token DOWNTO_SYM 
-%token ELSEIF_SYM 
-%token ELSE_SYM 
-%token END_SYM 
-%token EQ_SYM 
-%token FOR_SYM 
-%token FORWARD_SYM
-%token FUNCTION_SYM 
-%token GTE_SYM
-%token GT_SYM 
-%token IDENT_SYM
-%token IF_SYM
-%token INT_SYM 
-%token LBRACKET_SYM 
-%token LPAREN_SYM 
-%token LTE_SYM
-%token LT_SYM 
-%token MINUS_SYM 
-%token MOD_SYM 
-%token MULT_SYM
-%token NOT_SYM 
-%token OF_SYM
-%token ORD_SYM
-%token PLUS_SYM 
-%token PRED_SYM 
-%token PROCEDURE_SYM 
-%token RBRACKET_SYM
-%token READ_SYM 
-%token RECORD_SYM 
-%token REF_SYM
-%token REPEAT_SYM 
-%token RETURN_SYM 
-%token RPAREN_SYM 
-%token SEMICOLON_SYM 
-%token STOP_SYM 
-%token STRING_SYM 
-%token SUCC_SYM
-%token THEN_SYM 
-%token TO_SYM 
-%token TYPE_SYM 
-%token UNTIL_SYM 
-%token VAR_SYM 
-%token WHILE_SYM 
-%token WRITE_SYM
+%token <none> ARRAY_SYM
+%token <none> ASSIGN_SYM 
+%token <none> BEGIN_SYM
+%token <strVal> CHAR_SYM
+%token <none> CHR_SYM
+%token <none> COLON_SYM
+%token <none> COMMA_SYM 
+%token <none> CONST_SYM 
+%token <none> DIV_SYM 
+%token <none> DO_SYM 
+%token <none> DOT_SYM 
+%token <none> DOWNTO_SYM 
+%token <none> ELSEIF_SYM 
+%token <none> ELSE_SYM 
+%token <none> END_SYM 
+%token <none> EQ_SYM 
+%token <none> FOR_SYM 
+%token <none> FORWARD_SYM
+%token <none> FUNCTION_SYM 
+%token <none> GTE_SYM
+%token <none> GT_SYM 
+%token <strVal> IDENT_SYM
+%token <none> IF_SYM
+%token <intVal> INT_SYM 
+%token <none> LBRACKET_SYM 
+%token <none> LPAREN_SYM 
+%token <none> LTE_SYM
+%token <none> LT_SYM 
+%token <none> MINUS_SYM 
+%token <none> MOD_SYM 
+%token <none> MULT_SYM
+%token <none> NOT_SYM 
+%token <none> OF_SYM
+%token <none> ORD_SYM
+%token <none> PLUS_SYM 
+%token <none> PRED_SYM 
+%token <none> PROCEDURE_SYM 
+%token <none> RBRACKET_SYM
+%token <none> READ_SYM 
+%token <none> RECORD_SYM 
+%token <none> REF_SYM
+%token <none> REPEAT_SYM 
+%token <none> RETURN_SYM 
+%token <none> RPAREN_SYM 
+%token <none> SEMICOLON_SYM 
+%token <none> STOP_SYM 
+%token <strVal> STRING_SYM 
+%token <none> SUCC_SYM
+%token <none> THEN_SYM 
+%token <none> TO_SYM 
+%token <none> TYPE_SYM 
+%token <none> UNTIL_SYM 
+%token <none> VAR_SYM 
+%token <none> WHILE_SYM 
+%token <none> WRITE_SYM
 
-%left AND_SYM OR_SYM
+
+%left AND_SYM OR_SYM ASSIGN_SYM
 %right NOT_SYM
 %left PLUS_SYM MINUS_SYM
 %left DIV_SYM MOD_SYM MULT_SYM
@@ -77,245 +104,500 @@ void yyerror(const char*);
 %right UMINUS_SYM
 
 
+
+ /* Types */
+%type <expr> Expression LValue Statement ForBegin ForIncGuts ForDecGuts
+%type <typeList> RecordTypeDecls
+%type <exprList> WriteArgs ReadArgs LValues 
+%type <constVal> ConstExpression
+%type <none> NullStatement Assignment ReadStatement WriteStatement Optional_ConstDecl Optional_ConstDecls
+%type <identList> IdentList IdentLists
+%type <typeVal> Type SimpleType
+%type <recVal> RecordType
+%type <arrVal> ArrayType
+
+%start Program
+
 %%
-Program : ProgramStart Block DOT_SYM {std::cout<<"*Program"<<std::endl;} ;
 
-ProgramStart : optional_ConstDecls optional_TypeDecls optional_VarDecls optional_ProcOrFuncDecls ;
 
-optional_ConstDecls : CONST_SYM ConstDecls
-           			| 
-					;
+Program : ProgramStart Block DOT_SYM 
+	    {
+			std::cout<<"in parser.y"<<std::endl;
+			SymbolTable::getInstance()->popScope();
+			SymbolTable::getInstance()->popScope();
+			SymbolTable::getInstance()->emitEnd();
+		} 
+		;
 
-ConstDecls : ConstDecls ConstDecl 
-           | ConstDecl 
+ProgramStart : ConstDecl TypeDecl VarDecl Optional_ProcOrFuncDecls { ProgramStart();}
+			 ;
+
+ConstDecl :
+		  | CONST_SYM ConstDecls IDENT_SYM EQ_SYM ConstExpression SEMICOLON_SYM
+		  {
+			$5->name = $3;
+			SymbolTable::getInstance()->addSymbol($3,*$5,true);
+		  }
+		  ;
+
+ConstDecls : ConstDecls IDENT_SYM EQ_SYM ConstExpression SEMICOLON_SYM
+		   {
+				$4->name = $2;
+				SymbolTable::getInstance()->addSymbol($2,*$4,true);
+		   }
+           |  
            ;
 
-
-ConstDecl : IDENT_SYM EQ_SYM Expression SEMICOLON_SYM {std::cout<<"*ConstDecl"<<std::endl;}
-          ;
-
-optional_ProcOrFuncDecls : optional_ProcOrFuncDecls ProcedureDecl 
-                         | optional_ProcOrFuncDecls FunctionDecl 
+Optional_ProcOrFuncDecls : Optional_ProcOrFuncDecls ProcedureDecl 
+                         | Optional_ProcOrFuncDecls FunctionDecl 
                          | 
                          ;
 
-ProcedureDecl : PROCEDURE_SYM IDENT_SYM LPAREN_SYM optional_FormalParameters RPAREN_SYM SEMICOLON_SYM FORWARD_SYM SEMICOLON_SYM {std::cout<<"*ProcedureDecl Forward"<<std::endl;}
-              | PROCEDURE_SYM IDENT_SYM LPAREN_SYM optional_FormalParameters RPAREN_SYM SEMICOLON_SYM Body SEMICOLON_SYM {std::cout<<"ProcedureDecl Body"<<std::endl;} 
+ProcedureDecl : PROCEDURE_SYM IDENT_SYM LPAREN_SYM Optional_FormalParameters RPAREN_SYM SEMICOLON_SYM FORWARD_SYM SEMICOLON_SYM {std::cout<<"Empty"<<std::endl;}
+              | PROCEDURE_SYM IDENT_SYM LPAREN_SYM Optional_FormalParameters RPAREN_SYM SEMICOLON_SYM Body SEMICOLON_SYM {std::cout<<"Empty"<<std::endl;} 
               ;
 
-FunctionDecl : FUNCTION_SYM IDENT_SYM LPAREN_SYM optional_FormalParameters RPAREN_SYM COLON_SYM Type SEMICOLON_SYM FORWARD_SYM SEMICOLON_SYM {std::cout<<"*FunctionDecl"<<std::endl;}
-             | FUNCTION_SYM IDENT_SYM LPAREN_SYM optional_FormalParameters RPAREN_SYM COLON_SYM Type SEMICOLON_SYM Body SEMICOLON_SYM {std::cout<<"*FunctionDecl"<<std::endl;}
+FunctionDecl : FUNCTION_SYM IDENT_SYM LPAREN_SYM Optional_FormalParameters RPAREN_SYM COLON_SYM Type SEMICOLON_SYM FORWARD_SYM SEMICOLON_SYM {std::cout<<"Empty"<<std::endl;}
+             | FUNCTION_SYM IDENT_SYM LPAREN_SYM Optional_FormalParameters RPAREN_SYM COLON_SYM Type SEMICOLON_SYM Body SEMICOLON_SYM {std::cout<<"Empty"<<std::endl;}
              ;
 
-optional_FormalParameters : FormalParameters {std::cout<<"*optional_FormalParameters"<<std::endl;}
-                          | {std::cout<<"*optional_FormalParameters Empty"<<std::endl;}
+Optional_FormalParameters : FormalParameters {std::cout<<"optinal formal params\n";}
+                          | {std::cout<<"Empty"<<std::endl;}
                           ;
 
-FormalParameters : FormalParameter {std::cout<<"*Empty FormalParameters"<<std::endl;}
-				 | FormalParameters SEMICOLON_SYM FormalParameter {std::cout<<"*FormalParameters"<<std::endl;}
+FormalParameters : FormalParameter {std::cout<<"Empty"<<std::endl;}
+				 | FormalParameters SEMICOLON_SYM FormalParameter {std::cout<<"Empty"<<std::endl;}
                  ;
-FormalParameter : optional_Var IdentList COLON_SYM Type {std::cout<<"*FormalParameter"<<std::endl;}
+
+FormalParameter : Optional_Var IdentList COLON_SYM Type {std::cout<<"Empty"<<std::endl;}
                 ;
 
-optional_Var : VAR_SYM {std::cout<<"*Function VAR"<<std::endl;}
-             | REF_SYM {std::cout<<"*Function REF"<<std::endl;}
-             | {std::cout<<"*Function Nothing"<<std::endl;}
+Optional_Var : VAR_SYM {std::cout<<"Empty"<<std::endl;}
+             | REF_SYM {std::cout<<"Empty"<<std::endl;}
+             | {std::cout<<"Empty"<<std::endl;}
              ;
 
 
-Body : optional_ConstDecls optional_TypeDecls optional_VarDecls Block {std::cout<<"*Body"<<std::endl;}
+Body : Optional_ConstDecl TypeDecl VarDecl Block
      ;
 
-Block : BEGIN_SYM StatementSequence END_SYM {std::cout<<"*Block"<<std::endl;}
+Optional_ConstDecl :
+				   | CONST_SYM Optional_ConstDecls IDENT_SYM EQ_SYM ConstExpression SEMICOLON_SYM 
+				   {
+						$5->name=$3;
+						SymbolTable::getInstance()->addSymbol($3, *$5, true);
+				   }
+				   ;
+
+Optional_ConstDecls :
+					| Optional_ConstDecls IDENT_SYM EQ_SYM ConstExpression SEMICOLON_SYM
+					{
+						$4->name=$2;
+						SymbolTable::getInstance()->addSymbol($2, *$4, true);
+					}
+					;
+
+Block : BEGIN_SYM StatementSequence END_SYM 
       ;
 
-optional_TypeDecls : TYPE_SYM TypeDecls
+Optional_TypeDecls : TYPE_SYM TypeDecls
                    |
                    ;
 
-TypeDecls : TypeDecls TypeDecl
-          | TypeDecl
+TypeDecl :    
+		 | TYPE_SYM TypeDecls IDENT_SYM EQ_SYM Type SEMICOLON_SYM{ TypeDeclaration($3, $5);	}
+         ;
+		 
+TypeDecls :
+		  | TypeDecls IDENT_SYM EQ_SYM Type SEMICOLON_SYM {TypeDeclaration($2, $4);}        
           ;
 
-TypeDecl : IDENT_SYM EQ_SYM Type SEMICOLON_SYM {std::cout<<"*TypeDecl"<<std::endl;}
-         ;
-
-Type : SimpleType {std::cout<<"*Type: SimpleType"<<std::endl;}
-     | RecordType {std::cout<<"*Type: RecordType"<<std::endl;}
-     | ArrayType {std::cout<<"*Type: ARRAY_SYMType"<<std::endl;}
+Type : SimpleType {$<typeVal>$=$1;}
+     | RecordType { addRecord($1); $<recVal>$=$1;}
+     | ArrayType { addArray_Type($1); $<arrVal>$=$1;}
      ;
 
-SimpleType : IDENT_SYM {std::cout<<"*SimpleType"<<std::endl;}
+SimpleType : IDENT_SYM { $$ = newSimpleType($1);}
            ;
 
-RecordType : RECORD_SYM FieldDecls END_SYM {std::cout<<"*RecordType"<<std::endl;}
+RecordType : RECORD_SYM RecordTypeDecls END_SYM { $$ = new Record(*$2);}
+           ;
+		   
+RecordTypeDecls : {  $$=new std::vector<std::pair<std::vector<std::string>, std::shared_ptr<Type>>>();}
+				| RecordTypeDecls IdentList COLON_SYM Type SEMICOLON_SYM 
+				{
+					$1->push_back(std::make_pair(*$2, std::make_shared<Type>(*$4)));
+					$$=$1;
+				}
+				;
+		   
+ArrayType : ARRAY_SYM LBRACKET_SYM ConstExpression COLON_SYM ConstExpression RBRACKET_SYM OF_SYM Type{$$ = new Array_Type($8, *$3, *$5);}
+          ;
+
+IdentList : IdentLists IDENT_SYM
+		  {
+			std::cout<<"ident list"<<std::endl;
+			$1->push_back($2);
+			$$=$1;
+		  }
+          ;
+		  
+IdentLists : 
+		   {
+			 $$ = new std::vector<std::string>();
+		   }
+		   | IdentLists IDENT_SYM COMMA_SYM 
+		   {
+		    std::cout<<"ident lists"<<std::endl;
+			$1->push_back($2);
+			$$=$1;
+		   } 
+		   ;
+
+VarDecl : 
+	    | VAR_SYM VarDecls IdentList COLON_SYM Type SEMICOLON_SYM
+	    {
+			std::cout<<"found a var"<<std::endl;
+			std::for_each($3->begin(), $3->end(), [&](std::string val)
+			{
+				if(!SymbolTable::getInstance()->lookup($5->name))
+				{
+					VariableDeclaration($3, $5, val);
+				}
+				Var var(*$5, SymbolTable::getInstance()->offset.back(), val);
+				SymbolTable::getInstance()->offset.back()+=$5->size;
+				SymbolTable::getInstance()->addSymbol(val, var, true);
+			});
+		}
+		;
+		  
+VarDecls :
+         | VarDecls IdentList COLON_SYM Type SEMICOLON_SYM{
+			std::cout<<"Found Var"<<std::endl;
+			std::for_each($2->begin(), $2->end(),[&](std::string val)
+			{
+				MoreVariableDeclarations($4, val);
+			});
+	     }
+		 ;
+		 
+FieldDecls : FieldDecls FieldDecl {std::cout<<"Empty"<<std::endl;}
+           | {std::cout<<"Empty"<<std::endl;}
            ;
 
-FieldDecls : FieldDecls FieldDecl {std::cout<<"*FieldDecls FieldDecl"<<std::endl;}
-           | {std::cout<<"*FieldDeclEmpty"<<std::endl;}
-           ;
-
-FieldDecl : IdentList COLON_SYM Type SEMICOLON_SYM {std::cout<<"*FieldDecl"<<std::endl;}
+FieldDecl : IdentList COLON_SYM Type SEMICOLON_SYM {std::cout<<"Empty"<<std::endl;}
           ;
-
-IdentList : IdentList COMMA_SYM IDENT_SYM {std::cout<<"*IdentList , Ident"<<std::endl;}
-          | IDENT_SYM {std::cout<<"*IdentList Ident"<<std::endl;}
-          ;
-
-ArrayType : ARRAY_SYM LBRACKET_SYM Expression COLON_SYM Expression RBRACKET_SYM OF_SYM Type {std::cout<<"*ArrayType"<<std::endl;}
-          ;
-
- /* Variable Declarations */
-optional_VarDecls : VAR_SYM VarDecls
-                  |
-                  ;
-
-VarDecls : VarDecls VarDecl
-         | VarDecl
-         ;
-
-VarDecl : IdentList COLON_SYM Type SEMICOLON_SYM {std::cout<<"*VarDecl"<<std::endl;}
-        ;
-
+		
+		
  /* CPSL Statements */
-StatementSequence : StatementSequence SEMICOLON_SYM Statement {std::cout<<"*StatementSeq ; Statement"<<std::endl;}
-                  | Statement {std::cout<<"*StatementSeq"<<std::endl;}
+StatementSequence : StatementSequences Statement 
                   ;
 
-Statement : Assignment {std::cout<<"*Stm: Assignment"<<std::endl;}
-          | IfStatement {std::cout<<"*Stm: If"<<std::endl;}
-          | WhileStatement {std::cout<<"*Stm: While"<<std::endl;}
-          | RepeatStatement {std::cout<<"*Stm: Repeat"<<std::endl;}
-          | ForStatement {std::cout<<"*Stm: For"<<std::endl;}
-          | StopStatement {std::cout<<"*Stm: Stop"<<std::endl;}
-          | ReturnStatement {std::cout<<"*Stm: Return"<<std::endl;}
-          | ReadStatement {std::cout<<"*Stm: Read"<<std::endl;}
-          | WriteStatement {std::cout<<"*Stm: Write"<<std::endl;}
-          | ProcedureCall {std::cout<<"*Stm: Procedure"<<std::endl;}
-          | {std::cout<<"*Stm: NullStatement"<<std::endl;}
+StatementSequences :
+				   | StatementSequences Statement SEMICOLON_SYM
+
+Statement : Assignment 		{ SymbolTable::getInstance()->clearReg();}
+          | IfStatement 	{ SymbolTable::getInstance()->clearReg();}
+          | WhileStatement 	{ SymbolTable::getInstance()->clearReg();}
+          | RepeatStatement { SymbolTable::getInstance()->clearReg();}
+          | ForStatement 	{ SymbolTable::getInstance()->clearReg();}
+          | StopStatement 	{ SymbolTable::getInstance()->clearReg();}
+          | ReturnStatement { SymbolTable::getInstance()->clearReg();}
+          | ReadStatement 	{ SymbolTable::getInstance()->clearReg();}
+          | WriteStatement 	{ SymbolTable::getInstance()->clearReg();}
+          | ProcedureCall 	{ SymbolTable::getInstance()->clearReg();}
+		  | Expression		{ $$ = $1;}
+          | NullStatement   { SymbolTable::getInstance()->clearReg();}
           ;
 
-Assignment : LValue ASSIGN_SYM Expression {std::cout<<"*Assignment"<<std::endl;}
+Assignment : LValue ASSIGN_SYM Expression 
+           {
+		     create($1, $3);
+			 std::cout<<"after Assignment create()"<<std::endl;
+		   }
            ;
 
-IfStatement : IfHead ThenPart ElseIfList ElseClause END_SYM {std::cout<<"*IfStatement"<<std::endl;}
+IfStatement : IfHead ElseIfList ElseClause END_SYM 
+			{
+			   endIf();
+			}
             ;
 
-IfHead : IF_SYM Expression {std::cout<<"*IfHead"<<std::endl;}
-       ;
+IfHead : IfBegin THEN_SYM StatementSequence 
+       {
+      	   ifBranchEnd();
+	   }
+	   ;
 
-ThenPart : THEN_SYM StatementSequence {std::cout<<"*ThenPart"<<std::endl;}
-         ;
-
-ElseIfList : ElseIfList ElseIfHead ThenPart {std::cout<<"*ElseIfList"<<std::endl;}
-           | {std::cout<<"*ElseIfList empty"<<std::endl;}
-           ;
-
-ElseIfHead : ELSEIF_SYM Expression {std::cout<<"*ElseIfHead"<<std::endl;}
-           ;
-
-ElseClause : ELSE_SYM StatementSequence {std::cout<<"*ElseClause"<<std::endl;}
-           | {std::cout<<"*ElseClause"<<std::endl;}
-           ;
-
-WhileStatement : WhileHead DO_SYM StatementSequence END_SYM {std::cout<<"*WhileStatement"<<std::endl;}
-               ;
-
-WhileHead : WHILE_SYM Expression {std::cout<<"*WhileHead"<<std::endl;}
-          ;
-
-RepeatStatement : REPEAT_SYM StatementSequence UNTIL_SYM Expression {std::cout<<"*RepeatStatement"<<std::endl;}
-                ;
-
-ForStatement : ForHead ToHead DO_SYM StatementSequence END_SYM{std::cout<<"*ForStatement"<<std::endl;}
-             ;
-
-ForHead : FOR_SYM IDENT_SYM ASSIGN_SYM Expression {std::cout<<"*ForHead"<<std::endl;}
+IfBegin : IF_SYM Expression
+		{
+		   ifBegin();
+		   ifBranch($2);
+		}
         ;
 
-ToHead : TO_SYM Expression {std::cout<<"*ToHead To"<<std::endl;}
-       | DOWNTO_SYM Expression {std::cout<<"*ToHead Downto"<<std::endl;}
+ElseIfList : 
+		   | ElseIfList ElseIfHead THEN_SYM StatementSequence
+		   {
+		      ifBranchEnd();
+		   }
+           ;
+
+ElseIfHead : ElseBegin Expression 
+		   {
+		      ifBranch($2);
+		   }
+           ;
+		   
+ElseBegin : ELSEIF_SYM
+		  {
+		     labelIfBranch();
+		  }
+		  ;
+
+ElseClause : 
+		   | ElseStart StatementSequence 
+		   {
+		      ifBranchEnd();
+		   }
+           ;
+	 
+ElseStart : ELSE_SYM 
+		  {
+			labelIfBranch();
+		  }
+
+WhileStatement : WhileHead DO_SYM StatementSequence END_SYM 
+			   {
+			      loopEnd();
+			   }
+               ;
+
+WhileBegin : WHILE_SYM
+		   {
+		      loopBegin();
+		   }
+		   ;
+
+WhileHead : WhileBegin Expression 
+		  {
+		     whileStmt($2,true);
+		  }
+          ;
+
+RepeatStatement : RepeatStatementMiddle UNTIL_SYM Expression 
+				{
+				   std::cout<<"RepeatStatement ending"<<std::endl;
+				   repeatStmt($3);
+				}
+                ;
+			
+RepeatStatementMiddle : RepeatStatementBegin StatementSequence
+					  ;
+
+RepeatStatementBegin : REPEAT_SYM
+					 {
+						std::cout<<"RepeatStatementBegin"<<std::endl;
+					    loopBegin();
+					 }
+					 ;
+
+ForStatement : ForInc
+			 | ForDec
+			 ;
+
+ForInc : ForIncGuts DO_SYM StatementSequence END_SYM
+	   {
+	      create($1, AddExpr($1,(new Expression(1,Expression::intType,true))));
+	      loopEnd();
+	   }
+	   ;
+
+
+ForIncGuts : ForBegin TO_SYM Expression
+		   {
+		     forStmt(GtExpr($1,$3));
+		     $$ = $1;
+		   }
+		   ;
+		
+ForDec : ForDecGuts DO_SYM StatementSequence END_SYM
+	   {
+	      create($1, SubExpr($1,(new Expression(1, Expression::intType,true))));
+	      loopEnd();
+	   }
+	   ;
+	 
+ForDecGuts : ForBegin DOWNTO_SYM Expression
+		   {
+		     forStmt(LtExpr($1,$3));
+		     $$ = $1;
+		   }
+		   ;
+		   
+ForBegin : FOR_SYM IDENT_SYM ASSIGN_SYM Expression
+		 {
+		    auto newExpr = new Expression(std::string($2),Expression::stringType);
+			auto newExprVec = new std::vector<Expression>();
+			
+			newExprVec->push_back(*newExpr);
+			auto temp = genLValue(*newExprVec);
+			
+			create(temp,$4);
+			loopBegin();
+			$$ = temp;
+		 }
+		 ;
+
+ToHead : TO_SYM Expression {std::cout<<"Empty"<<std::endl;}
+       | DOWNTO_SYM Expression {std::cout<<"Empty"<<std::endl;}
        ;
 
-StopStatement : STOP_SYM {std::cout<<"*StopStatement"<<std::endl;}
+StopStatement : STOP_SYM {std::cout<<"Empty"<<std::endl;}
               ;
 
-ReturnStatement : RETURN_SYM Expression {std::cout<<"*ReturnStatement"<<std::endl;}
-                | RETURN_SYM {std::cout<<"*Return empty"<<std::endl;}
+ReturnStatement : RETURN_SYM Expression {std::cout<<"Empty"<<std::endl;}
+                | RETURN_SYM 
                 ;
 
 
-ReadStatement : READ_SYM LPAREN_SYM ReadArgs RPAREN_SYM {std::cout<<"*ReadStatement"<<std::endl;}
+ReadStatement : READ_SYM LPAREN_SYM ReadArgs LValue RPAREN_SYM 
+			  {
+			    std::cout<<"finished read statement"<<std::endl;
+				$3->push_back(*$4);
+				readStmt(*$3);
+			  }
               ;
 
-ReadArgs : ReadArgs COMMA_SYM LValue {std::cout<<"*ReadArgs , LVal"<<std::endl;}
-         | LValue {std::cout<<"*ReadArgs LVal"<<std::endl;}
+ReadArgs : {$$ = new std::vector<Expression>();}
+		 | ReadArgs LValue COMMA_SYM
+		 {
+			$1->push_back(*$2);
+			$$ = $1;
+		 }
          ;
 
-WriteStatement : WRITE_SYM LPAREN_SYM WriteArgs RPAREN_SYM {std::cout<<"*WriteStatement"<<std::endl;}
+WriteStatement : WRITE_SYM LPAREN_SYM WriteArgs Expression RPAREN_SYM 
+               {
+				  std::cout<<"finished write statement"<<std::endl;
+			      $3->push_back(*$4);
+				  writeStmt(*$3);
+			   }
                ;
 
-WriteArgs : WriteArgs COMMA_SYM Expression {std::cout<<"*WriteArgs , exp"<<std::endl;}
-          | Expression {std::cout<<"*WriteArgs Exp"<<std::endl;}
+WriteArgs :
+	      {
+			 std::cout<<"WriteArgs, new vector"<<std::endl;
+		     $$ = new std::vector<Expression>();
+		  }
+          | WriteArgs Expression COMMA_SYM 
+		  {
+			 std::cout<<"WriteArgs, pushing another back"<<std::endl;
+			 $1->push_back(*$2);
+			 $$ = $1;
+		  }
           ;
 
-ProcedureCall : IDENT_SYM LPAREN_SYM optional_Arguments RPAREN_SYM {std::cout<<"*ProcedureCall"<<std::endl;}
+ProcedureCall : IDENT_SYM LPAREN_SYM Optional_Arguments RPAREN_SYM {std::cout<<"Empty"<<std::endl;}
               ;
 
-optional_Arguments : Arguments {std::cout<<"*optional_Arguments"<<std::endl;}
-           | {std::cout<<"*optional_Arguments Empty"<<std::endl;}
+Optional_Arguments : Arguments {std::cout<<"Empty"<<std::endl;}
+           | {std::cout<<"Empty"<<std::endl;}
            ;
  
-Arguments : Arguments COMMA_SYM Expression {std::cout<<"*Arguments , exp"<<std::endl;}
-          | Expression {std::cout<<"*Arguments exp"<<std::endl;}
+Arguments : Arguments COMMA_SYM Expression {std::cout<<"Empty"<<std::endl;}
+          | Expression {std::cout<<"Empty"<<std::endl;}
           ;
 
-Expression : CHARCONST_SYM								{std::cout<<"*charconst"<<std::endl;}
-           | CHR_SYM LPAREN_SYM Expression RPAREN_SYM   {std::cout<<"*char (exp)"<<std::endl;}
-           | Expression AND_SYM Expression         		{std::cout<<"*exp & exp"<<std::endl;}
-           | Expression DIV_SYM Expression         		{std::cout<<"*exp / exp"<<std::endl;}
-           | Expression EQ_SYM Expression          		{std::cout<<"*exp = exp"<<std::endl;}
-           | Expression GTE_SYM Expression         		{std::cout<<"*exp >= exp"<<std::endl;}
-           | Expression GT_SYM Expression         		{std::cout<<"*exp > exp"<<std::endl;}
-           | Expression LTE_SYM Expression         		{std::cout<<"*exp <= exp"<<std::endl;}
-           | Expression LT_SYM Expression          		{std::cout<<"*exp < exp"<<std::endl;}
-           | Expression MINUS_SYM Expression       		{std::cout<<"*exp -  exp"<<std::endl;}
-           | Expression MOD_SYM Expression         		{std::cout<<"*exp precent exp"<<std::endl;}
-           | Expression MULT_SYM Expression        		{std::cout<<"*exp * exp"<<std::endl;}
-           | Expression NEQ_SYM Expression         		{std::cout<<"*exp != exp"<<std::endl;}
-           | Expression OR_SYM Expression          		{std::cout<<"*exp | exp"<<std::endl;}
-           | Expression PLUS_SYM Expression        		{std::cout<<"*exp + exp"<<std::endl;}
-           | FunctionCall                      			{std::cout<<"*functionCall"<<std::endl;}
-           | INT_SYM                               		{std::cout<<"*Int"<<std::endl;}
-           | LPAREN_SYM Expression RPAREN_SYM           {std::cout<<"*( exp )"<<std::endl;}
-           | LValue                            			{std::cout<<"*LValue"<<std::endl;}
-           | MINUS_SYM Expression %prec UMINUS_SYM      {std::cout<<"*Unary Minus "<<std::endl;}
-           | NOT_SYM Expression                    		{std::cout<<"*~ exp"<<std::endl;}
-           | ORD_SYM LPAREN_SYM Expression RPAREN_SYM   {std::cout<<"*| ( exp )"<<std::endl;}
-           | PRED_SYM LPAREN_SYM Expression RPAREN_SYM	{std::cout<<"*&( exp )"<<std::endl;}
-           | STRING_SYM                          		{std::cout<<"*String"<<std::endl;}
-           | SUCC_SYM LPAREN_SYM Expression RPAREN_SYM      {std::cout<<"*Succ( exp )"<<std::endl;}
+Expression : LValue									    {$$=$1;}
+           | Expression AND_SYM Expression         		{$$ = AndExpr($1,$3);}
+           | Expression DIV_SYM Expression         		{$$ = DivExpr($1,$3);}
+           | Expression EQ_SYM Expression          		{$$ = EqExpr($1,$3);}
+           | Expression GTE_SYM Expression         		{$$ = GteExpr($1,$3);}
+           | Expression GT_SYM Expression         		{$$ = GtExpr($1,$3);}
+           | Expression LTE_SYM Expression         		{$$ = LteExpr($1,$3);}
+           | Expression LT_SYM Expression          		{$$ = LtExpr($1,$3);}
+           | Expression MINUS_SYM Expression       		{$$ = SubExpr($1,$3);}
+           | Expression MOD_SYM Expression         		{$$ = ModExpr($1,$3);}
+           | Expression MULT_SYM Expression        		{$$ = MultExpr($1,$3);}
+           | Expression NEQ_SYM Expression         		{$$ = NeqExpr($1,$3);}
+           | Expression OR_SYM Expression          		{$$ = OrExpr($1,$3);}
+           | Expression PLUS_SYM Expression        		{{$$ = AddExpr($1,$3);}std::cout<<"after PlusExpression"<<std::endl;}
+		   | INT_SYM 									{$$ = IntExpr($1);}
+		   | CHAR_SYM 									{{$$ = CharExpr($1);}std::cout<<"after charexpr"<<std::endl;}
+		   | STRING_SYM									{$$ = StrExpr($1);}
+           | FunctionCall                      			{} 
+           | LPAREN_SYM Expression RPAREN_SYM          {{std::cout<<"( exp )"<<std::endl;}$$=$2;}
+           | MINUS_SYM Expression %prec UMINUS_SYM      {std::cout<<"Empty"<<std::endl;}
+           | NOT_SYM Expression                    		{std::cout<<"Empty"<<std::endl;}
+           | ORD_SYM LPAREN_SYM Expression RPAREN_SYM   
+           | PRED_SYM LPAREN_SYM Expression RPAREN_SYM	
+           | SUCC_SYM LPAREN_SYM Expression RPAREN_SYM  
+		   | CHR_SYM LPAREN_SYM Expression RPAREN_SYM
            ;
+
+		   
+ConstExpression : INT_SYM                                   {$$ = new Constant($1);}
+				| CHAR_SYM									{$$ = new Constant($1[1]);}
+				| STRING_SYM								{$$ = new Constant(std::string($1),std::string($1));}
+				| IDENT_SYM									{$$ = new Constant(std::string($1),Constant::identType);}
+			    | ConstExpression AND_SYM ConstExpression	{$$ = ConstAndExpr(*$1,*$3);}
+			    | ConstExpression DIV_SYM ConstExpression   {$$ = ConstDivExpr(*$1,*$3);}
+			    | ConstExpression EQ_SYM ConstExpression    {$$ = ConstEqExpr(*$1,*$3);}
+			    | ConstExpression GTE_SYM ConstExpression   {$$ = ConstGteExpr(*$1,*$3);}
+			    | ConstExpression GT_SYM ConstExpression    {$$ = ConstGtExpr(*$1,*$3);}
+			    | ConstExpression LTE_SYM ConstExpression   {$$ = ConstLteExpr(*$1,*$3);}
+			    | ConstExpression LT_SYM ConstExpression    {$$ = ConstLtExpr(*$1,*$3);}
+			    | ConstExpression MINUS_SYM ConstExpression {$$ = ConstSubExpr(*$1,*$3);}
+			    | ConstExpression MOD_SYM ConstExpression   {$$ = ConstModExpr(*$1,*$3);}
+			    | ConstExpression MULT_SYM ConstExpression  {$$ = ConstMultExpr(*$1,*$3);}
+			    | ConstExpression NEQ_SYM ConstExpression   {$$ = ConstNeqExpr(*$1,*$3);}
+			    | ConstExpression OR_SYM ConstExpression    {$$ = ConstOrExpr(*$1,*$3);}
+			    | ConstExpression PLUS_SYM ConstExpression  {$$ = ConstAddExpr(*$1,*$3);}
+				| LPAREN_SYM ConstExpression RPAREN_SYM     {$$ = $2;}
+				| NOT_SYM ConstExpression                   {$$ = ConstNotExpr(*$2);}
+				| MINUS_SYM ConstExpression %prec UMINUS_SYM{$$ = ConstUminusExpr(*$2);}
+			    ;
    
-FunctionCall : IDENT_SYM LPAREN_SYM optional_Arguments RPAREN_SYM {std::cout<<"*FunctionCall"<<std::endl;}
+FunctionCall : IDENT_SYM LPAREN_SYM Optional_Arguments RPAREN_SYM {std::cout<<"Empty"<<std::endl;}
              ;
 
-LValue : LValue DOT_SYM IDENT_SYM {std::cout<<"*LValue"<<std::endl;}
-       | LValue LBRACKET_SYM Expression RBRACKET_SYM {std::cout<<"*LValue"<<std::endl;}
-       | IDENT_SYM {std::cout<<"*LValue"<<std::endl;}
-       ;
+LValue : IDENT_SYM LValues
+	   {
+		  std::cout<<"***LValue"<<std::endl;
+	      auto temp = new Expression(std::string($1), Expression::stringType);
+		  $2->push_back(*temp);
+		  std::reverse($2->begin(), $2->end());
+		  $$ = genLValue(*$2);
+	   }
+	   ;
 
+LValues : {$$ = new std::vector<Expression>();}
+		| DOT_SYM IDENT_SYM LValues
+		{
+			std::cout<<"LValues"<<std::endl;
+			auto temp = new Expression(std::string($2), Expression::stringType);
+			$3->push_back(*temp);
+			$$ = $3;
+		}
+		| LBRACKET_SYM Expression RBRACKET_SYM LValues 
+		{
+			std::cout<<"LValues"<<std::endl;
+			$4->push_back(*$2);
+			$$=$4;
+		}
+		;
 
+NullStatement :
+			  ;
 %%
-
-int main(void)
-{
-	yyparse();
-}
 
 void yyerror(const char* msg)
 {
-	std::cout<<"ERROR! "<< msg << " Line: "<< num_lines <<std::endl;
+	std::cout<<"ERROR! "<< msg << " "<<num_lines<<std::endl;
 }
+
+
 
 

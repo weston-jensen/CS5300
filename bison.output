@@ -1,0 +1,4735 @@
+Nonterminals useless in grammar
+
+   Optional_TypeDecls
+   FieldDecls
+   FieldDecl
+   ToHead
+
+
+Rules useless in grammar
+
+  151 Optional_TypeDecls: TYPE_SYM TypeDecls
+  152                   | %empty
+
+  153 FieldDecls: FieldDecls FieldDecl
+  154           | %empty
+
+  155 FieldDecl: IdentList COLON_SYM Type SEMICOLON_SYM
+
+  156 ToHead: TO_SYM Expression
+  157       | DOWNTO_SYM Expression
+
+
+State 213 conflicts: 5 reduce/reduce
+
+
+Grammar
+
+    0 $accept: Program $end
+
+    1 Program: ProgramStart Block DOT_SYM
+
+    2 ProgramStart: ConstDecl TypeDecl VarDecl Optional_ProcOrFuncDecls
+
+    3 ConstDecl: %empty
+    4          | CONST_SYM ConstDecls IDENT_SYM EQ_SYM ConstExpression SEMICOLON_SYM
+
+    5 ConstDecls: ConstDecls IDENT_SYM EQ_SYM ConstExpression SEMICOLON_SYM
+    6           | %empty
+
+    7 Optional_ProcOrFuncDecls: Optional_ProcOrFuncDecls ProcedureDecl
+    8                         | Optional_ProcOrFuncDecls FunctionDecl
+    9                         | %empty
+
+   10 ProcedureDecl: PROCEDURE_SYM IDENT_SYM LPAREN_SYM Optional_FormalParameters RPAREN_SYM SEMICOLON_SYM FORWARD_SYM SEMICOLON_SYM
+   11              | PROCEDURE_SYM IDENT_SYM LPAREN_SYM Optional_FormalParameters RPAREN_SYM SEMICOLON_SYM Body SEMICOLON_SYM
+
+   12 FunctionDecl: FUNCTION_SYM IDENT_SYM LPAREN_SYM Optional_FormalParameters RPAREN_SYM COLON_SYM Type SEMICOLON_SYM FORWARD_SYM SEMICOLON_SYM
+   13             | FUNCTION_SYM IDENT_SYM LPAREN_SYM Optional_FormalParameters RPAREN_SYM COLON_SYM Type SEMICOLON_SYM Body SEMICOLON_SYM
+
+   14 Optional_FormalParameters: FormalParameters
+   15                          | %empty
+
+   16 FormalParameters: FormalParameter
+   17                 | FormalParameters SEMICOLON_SYM FormalParameter
+
+   18 FormalParameter: Optional_Var IdentList COLON_SYM Type
+
+   19 Optional_Var: VAR_SYM
+   20             | REF_SYM
+   21             | %empty
+
+   22 Body: Optional_ConstDecl TypeDecl VarDecl Block
+
+   23 Optional_ConstDecl: %empty
+   24                   | CONST_SYM Optional_ConstDecls IDENT_SYM EQ_SYM ConstExpression SEMICOLON_SYM
+
+   25 Optional_ConstDecls: %empty
+   26                    | Optional_ConstDecls IDENT_SYM EQ_SYM ConstExpression SEMICOLON_SYM
+
+   27 Block: BEGIN_SYM StatementSequence END_SYM
+
+   28 TypeDecl: %empty
+   29         | TYPE_SYM TypeDecls IDENT_SYM EQ_SYM Type SEMICOLON_SYM
+
+   30 TypeDecls: %empty
+   31          | TypeDecls IDENT_SYM EQ_SYM Type SEMICOLON_SYM
+
+   32 Type: SimpleType
+   33     | RecordType
+   34     | ArrayType
+
+   35 SimpleType: IDENT_SYM
+
+   36 RecordType: RECORD_SYM RecordTypeDecls END_SYM
+
+   37 RecordTypeDecls: %empty
+   38                | RecordTypeDecls IdentList COLON_SYM Type SEMICOLON_SYM
+
+   39 ArrayType: ARRAY_SYM LBRACKET_SYM ConstExpression COLON_SYM ConstExpression RBRACKET_SYM OF_SYM Type
+
+   40 IdentList: IdentLists IDENT_SYM
+
+   41 IdentLists: %empty
+   42           | IdentLists IDENT_SYM COMMA_SYM
+
+   43 VarDecl: %empty
+   44        | VAR_SYM VarDecls IdentList COLON_SYM Type SEMICOLON_SYM
+
+   45 VarDecls: %empty
+   46         | VarDecls IdentList COLON_SYM Type SEMICOLON_SYM
+
+   47 StatementSequence: StatementSequences Statement
+
+   48 StatementSequences: %empty
+   49                   | StatementSequences Statement SEMICOLON_SYM
+
+   50 Statement: Assignment
+   51          | IfStatement
+   52          | WhileStatement
+   53          | RepeatStatement
+   54          | ForStatement
+   55          | StopStatement
+   56          | ReturnStatement
+   57          | ReadStatement
+   58          | WriteStatement
+   59          | ProcedureCall
+   60          | Expression
+   61          | NullStatement
+
+   62 Assignment: LValue ASSIGN_SYM Expression
+
+   63 IfStatement: IfHead ElseIfList ElseClause END_SYM
+
+   64 IfHead: IfBegin THEN_SYM StatementSequence
+
+   65 IfBegin: IF_SYM Expression
+
+   66 ElseIfList: %empty
+   67           | ElseIfList ElseIfHead THEN_SYM StatementSequence
+
+   68 ElseIfHead: ElseBegin Expression
+
+   69 ElseBegin: ELSEIF_SYM
+
+   70 ElseClause: %empty
+   71           | ElseStart StatementSequence
+
+   72 ElseStart: ELSE_SYM
+
+   73 WhileStatement: WhileHead DO_SYM StatementSequence END_SYM
+
+   74 WhileBegin: WHILE_SYM
+
+   75 WhileHead: WhileBegin Expression
+
+   76 RepeatStatement: RepeatStatementMiddle UNTIL_SYM Expression
+
+   77 RepeatStatementMiddle: RepeatStatementBegin StatementSequence
+
+   78 RepeatStatementBegin: REPEAT_SYM
+
+   79 ForStatement: ForInc
+   80             | ForDec
+
+   81 ForInc: ForIncGuts DO_SYM StatementSequence END_SYM
+
+   82 ForIncGuts: ForBegin TO_SYM Expression
+
+   83 ForDec: ForDecGuts DO_SYM StatementSequence END_SYM
+
+   84 ForDecGuts: ForBegin DOWNTO_SYM Expression
+
+   85 ForBegin: FOR_SYM IDENT_SYM ASSIGN_SYM Expression
+
+   86 StopStatement: STOP_SYM
+
+   87 ReturnStatement: RETURN_SYM Expression
+   88                | RETURN_SYM
+
+   89 ReadStatement: READ_SYM LPAREN_SYM ReadArgs LValue RPAREN_SYM
+
+   90 ReadArgs: %empty
+   91         | ReadArgs LValue COMMA_SYM
+
+   92 WriteStatement: WRITE_SYM LPAREN_SYM WriteArgs Expression RPAREN_SYM
+
+   93 WriteArgs: %empty
+   94          | WriteArgs Expression COMMA_SYM
+
+   95 ProcedureCall: IDENT_SYM LPAREN_SYM Optional_Arguments RPAREN_SYM
+
+   96 Optional_Arguments: Arguments
+   97                   | %empty
+
+   98 Arguments: Arguments COMMA_SYM Expression
+   99          | Expression
+
+  100 Expression: LValue
+  101           | Expression AND_SYM Expression
+  102           | Expression DIV_SYM Expression
+  103           | Expression EQ_SYM Expression
+  104           | Expression GTE_SYM Expression
+  105           | Expression GT_SYM Expression
+  106           | Expression LTE_SYM Expression
+  107           | Expression LT_SYM Expression
+  108           | Expression MINUS_SYM Expression
+  109           | Expression MOD_SYM Expression
+  110           | Expression MULT_SYM Expression
+  111           | Expression NEQ_SYM Expression
+  112           | Expression OR_SYM Expression
+  113           | Expression PLUS_SYM Expression
+  114           | INT_SYM
+  115           | CHAR_SYM
+  116           | STRING_SYM
+  117           | FunctionCall
+  118           | LPAREN_SYM Expression RPAREN_SYM
+  119           | MINUS_SYM Expression
+  120           | NOT_SYM Expression
+  121           | ORD_SYM LPAREN_SYM Expression RPAREN_SYM
+  122           | PRED_SYM LPAREN_SYM Expression RPAREN_SYM
+  123           | SUCC_SYM LPAREN_SYM Expression RPAREN_SYM
+  124           | CHR_SYM LPAREN_SYM Expression RPAREN_SYM
+
+  125 ConstExpression: INT_SYM
+  126                | CHAR_SYM
+  127                | STRING_SYM
+  128                | IDENT_SYM
+  129                | ConstExpression AND_SYM ConstExpression
+  130                | ConstExpression DIV_SYM ConstExpression
+  131                | ConstExpression EQ_SYM ConstExpression
+  132                | ConstExpression GTE_SYM ConstExpression
+  133                | ConstExpression GT_SYM ConstExpression
+  134                | ConstExpression LTE_SYM ConstExpression
+  135                | ConstExpression LT_SYM ConstExpression
+  136                | ConstExpression MINUS_SYM ConstExpression
+  137                | ConstExpression MOD_SYM ConstExpression
+  138                | ConstExpression MULT_SYM ConstExpression
+  139                | ConstExpression NEQ_SYM ConstExpression
+  140                | ConstExpression OR_SYM ConstExpression
+  141                | ConstExpression PLUS_SYM ConstExpression
+  142                | LPAREN_SYM ConstExpression RPAREN_SYM
+  143                | NOT_SYM ConstExpression
+  144                | MINUS_SYM ConstExpression
+
+  145 FunctionCall: IDENT_SYM LPAREN_SYM Optional_Arguments RPAREN_SYM
+
+  146 LValue: IDENT_SYM LValues
+
+  147 LValues: %empty
+  148        | DOT_SYM IDENT_SYM LValues
+  149        | LBRACKET_SYM Expression RBRACKET_SYM LValues
+
+  150 NullStatement: %empty
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+ARRAY_SYM (258) 39
+ASSIGN_SYM (259) 62 85
+BEGIN_SYM (260) 27
+CHAR_SYM (261) 115 126
+CHR_SYM (262) 124
+COLON_SYM (263) 12 13 18 38 39 44 46
+COMMA_SYM (264) 42 91 94 98
+CONST_SYM (265) 4 24
+DIV_SYM (266) 102 130
+DO_SYM (267) 73 81 83
+DOT_SYM (268) 1 148
+DOWNTO_SYM (269) 84
+ELSEIF_SYM (270) 69
+ELSE_SYM (271) 72
+END_SYM (272) 27 36 63 73 81 83
+EQ_SYM (273) 4 5 24 26 29 31 103 131
+FOR_SYM (274) 85
+FORWARD_SYM (275) 10 12
+FUNCTION_SYM (276) 12 13
+GTE_SYM (277) 104 132
+GT_SYM (278) 105 133
+IDENT_SYM (279) 4 5 10 11 12 13 24 26 29 31 35 40 42 85 95 128 145
+    146 148
+IF_SYM (280) 65
+INT_SYM (281) 114 125
+LBRACKET_SYM (282) 39 149
+LPAREN_SYM (283) 10 11 12 13 89 92 95 118 121 122 123 124 142 145
+LTE_SYM (284) 106 134
+LT_SYM (285) 107 135
+MINUS_SYM (286) 108 119 136 144
+MOD_SYM (287) 109 137
+MULT_SYM (288) 110 138
+NOT_SYM (289) 120 143
+OF_SYM (290) 39
+ORD_SYM (291) 121
+PLUS_SYM (292) 113 141
+PRED_SYM (293) 122
+PROCEDURE_SYM (294) 10 11
+RBRACKET_SYM (295) 39 149
+READ_SYM (296) 89
+RECORD_SYM (297) 36
+REF_SYM (298) 20
+REPEAT_SYM (299) 78
+RETURN_SYM (300) 87 88
+RPAREN_SYM (301) 10 11 12 13 89 92 95 118 121 122 123 124 142 145
+SEMICOLON_SYM (302) 4 5 10 11 12 13 17 24 26 29 31 38 44 46 49
+STOP_SYM (303) 86
+STRING_SYM (304) 116 127
+SUCC_SYM (305) 123
+THEN_SYM (306) 64 67
+TO_SYM (307) 82
+TYPE_SYM (308) 29
+UNTIL_SYM (309) 76
+VAR_SYM (310) 19 44
+WHILE_SYM (311) 74
+WRITE_SYM (312) 92
+AND_SYM (313) 101 129
+OR_SYM (314) 112 140
+NEQ_SYM (315) 111 139
+UMINUS_SYM (316)
+
+
+Nonterminals, with rules where they appear
+
+$accept (62)
+    on left: 0
+Program (63)
+    on left: 1, on right: 0
+ProgramStart (64)
+    on left: 2, on right: 1
+ConstDecl (65)
+    on left: 3 4, on right: 2
+ConstDecls (66)
+    on left: 5 6, on right: 4 5
+Optional_ProcOrFuncDecls (67)
+    on left: 7 8 9, on right: 2 7 8
+ProcedureDecl (68)
+    on left: 10 11, on right: 7
+FunctionDecl (69)
+    on left: 12 13, on right: 8
+Optional_FormalParameters (70)
+    on left: 14 15, on right: 10 11 12 13
+FormalParameters (71)
+    on left: 16 17, on right: 14 17
+FormalParameter (72)
+    on left: 18, on right: 16 17
+Optional_Var (73)
+    on left: 19 20 21, on right: 18
+Body (74)
+    on left: 22, on right: 11 13
+Optional_ConstDecl (75)
+    on left: 23 24, on right: 22
+Optional_ConstDecls (76)
+    on left: 25 26, on right: 24 26
+Block (77)
+    on left: 27, on right: 1 22
+TypeDecl (78)
+    on left: 28 29, on right: 2 22
+TypeDecls (79)
+    on left: 30 31, on right: 29 31
+Type (80)
+    on left: 32 33 34, on right: 12 13 18 29 31 38 39 44 46
+SimpleType (81)
+    on left: 35, on right: 32
+RecordType (82)
+    on left: 36, on right: 33
+RecordTypeDecls (83)
+    on left: 37 38, on right: 36 38
+ArrayType (84)
+    on left: 39, on right: 34
+IdentList (85)
+    on left: 40, on right: 18 38 44 46
+IdentLists (86)
+    on left: 41 42, on right: 40 42
+VarDecl (87)
+    on left: 43 44, on right: 2 22
+VarDecls (88)
+    on left: 45 46, on right: 44 46
+StatementSequence (89)
+    on left: 47, on right: 27 64 67 71 73 77 81 83
+StatementSequences (90)
+    on left: 48 49, on right: 47 49
+Statement (91)
+    on left: 50 51 52 53 54 55 56 57 58 59 60 61, on right: 47 49
+Assignment (92)
+    on left: 62, on right: 50
+IfStatement (93)
+    on left: 63, on right: 51
+IfHead (94)
+    on left: 64, on right: 63
+IfBegin (95)
+    on left: 65, on right: 64
+ElseIfList (96)
+    on left: 66 67, on right: 63 67
+ElseIfHead (97)
+    on left: 68, on right: 67
+ElseBegin (98)
+    on left: 69, on right: 68
+ElseClause (99)
+    on left: 70 71, on right: 63
+ElseStart (100)
+    on left: 72, on right: 71
+WhileStatement (101)
+    on left: 73, on right: 52
+WhileBegin (102)
+    on left: 74, on right: 75
+WhileHead (103)
+    on left: 75, on right: 73
+RepeatStatement (104)
+    on left: 76, on right: 53
+RepeatStatementMiddle (105)
+    on left: 77, on right: 76
+RepeatStatementBegin (106)
+    on left: 78, on right: 77
+ForStatement (107)
+    on left: 79 80, on right: 54
+ForInc (108)
+    on left: 81, on right: 79
+ForIncGuts (109)
+    on left: 82, on right: 81
+ForDec (110)
+    on left: 83, on right: 80
+ForDecGuts (111)
+    on left: 84, on right: 83
+ForBegin (112)
+    on left: 85, on right: 82 84
+StopStatement (113)
+    on left: 86, on right: 55
+ReturnStatement (114)
+    on left: 87 88, on right: 56
+ReadStatement (115)
+    on left: 89, on right: 57
+ReadArgs (116)
+    on left: 90 91, on right: 89 91
+WriteStatement (117)
+    on left: 92, on right: 58
+WriteArgs (118)
+    on left: 93 94, on right: 92 94
+ProcedureCall (119)
+    on left: 95, on right: 59
+Optional_Arguments (120)
+    on left: 96 97, on right: 95 145
+Arguments (121)
+    on left: 98 99, on right: 96 98
+Expression (122)
+    on left: 100 101 102 103 104 105 106 107 108 109 110 111 112 113
+    114 115 116 117 118 119 120 121 122 123 124, on right: 60 62 65
+    68 75 76 82 84 85 87 92 94 98 99 101 102 103 104 105 106 107 108
+    109 110 111 112 113 118 119 120 121 122 123 124 149
+ConstExpression (123)
+    on left: 125 126 127 128 129 130 131 132 133 134 135 136 137 138
+    139 140 141 142 143 144, on right: 4 5 24 26 39 129 130 131 132
+    133 134 135 136 137 138 139 140 141 142 143 144
+FunctionCall (124)
+    on left: 145, on right: 117
+LValue (125)
+    on left: 146, on right: 62 89 91 100
+LValues (126)
+    on left: 147 148 149, on right: 146 148 149
+NullStatement (127)
+    on left: 150, on right: 61
+
+
+State 0
+
+    0 $accept: . Program $end
+
+    CONST_SYM  shift, and go to state 1
+
+    $default  reduce using rule 3 (ConstDecl)
+
+    Program       go to state 2
+    ProgramStart  go to state 3
+    ConstDecl     go to state 4
+
+
+State 1
+
+    4 ConstDecl: CONST_SYM . ConstDecls IDENT_SYM EQ_SYM ConstExpression SEMICOLON_SYM
+
+    $default  reduce using rule 6 (ConstDecls)
+
+    ConstDecls  go to state 5
+
+
+State 2
+
+    0 $accept: Program . $end
+
+    $end  shift, and go to state 6
+
+
+State 3
+
+    1 Program: ProgramStart . Block DOT_SYM
+
+    BEGIN_SYM  shift, and go to state 7
+
+    Block  go to state 8
+
+
+State 4
+
+    2 ProgramStart: ConstDecl . TypeDecl VarDecl Optional_ProcOrFuncDecls
+
+    TYPE_SYM  shift, and go to state 9
+
+    $default  reduce using rule 28 (TypeDecl)
+
+    TypeDecl  go to state 10
+
+
+State 5
+
+    4 ConstDecl: CONST_SYM ConstDecls . IDENT_SYM EQ_SYM ConstExpression SEMICOLON_SYM
+    5 ConstDecls: ConstDecls . IDENT_SYM EQ_SYM ConstExpression SEMICOLON_SYM
+
+    IDENT_SYM  shift, and go to state 11
+
+
+State 6
+
+    0 $accept: Program $end .
+
+    $default  accept
+
+
+State 7
+
+   27 Block: BEGIN_SYM . StatementSequence END_SYM
+
+    $default  reduce using rule 48 (StatementSequences)
+
+    StatementSequence   go to state 12
+    StatementSequences  go to state 13
+
+
+State 8
+
+    1 Program: ProgramStart Block . DOT_SYM
+
+    DOT_SYM  shift, and go to state 14
+
+
+State 9
+
+   29 TypeDecl: TYPE_SYM . TypeDecls IDENT_SYM EQ_SYM Type SEMICOLON_SYM
+
+    $default  reduce using rule 30 (TypeDecls)
+
+    TypeDecls  go to state 15
+
+
+State 10
+
+    2 ProgramStart: ConstDecl TypeDecl . VarDecl Optional_ProcOrFuncDecls
+
+    VAR_SYM  shift, and go to state 16
+
+    $default  reduce using rule 43 (VarDecl)
+
+    VarDecl  go to state 17
+
+
+State 11
+
+    4 ConstDecl: CONST_SYM ConstDecls IDENT_SYM . EQ_SYM ConstExpression SEMICOLON_SYM
+    5 ConstDecls: ConstDecls IDENT_SYM . EQ_SYM ConstExpression SEMICOLON_SYM
+
+    EQ_SYM  shift, and go to state 18
+
+
+State 12
+
+   27 Block: BEGIN_SYM StatementSequence . END_SYM
+
+    END_SYM  shift, and go to state 19
+
+
+State 13
+
+   47 StatementSequence: StatementSequences . Statement
+   49 StatementSequences: StatementSequences . Statement SEMICOLON_SYM
+
+    CHAR_SYM    shift, and go to state 20
+    CHR_SYM     shift, and go to state 21
+    FOR_SYM     shift, and go to state 22
+    IDENT_SYM   shift, and go to state 23
+    IF_SYM      shift, and go to state 24
+    INT_SYM     shift, and go to state 25
+    LPAREN_SYM  shift, and go to state 26
+    MINUS_SYM   shift, and go to state 27
+    NOT_SYM     shift, and go to state 28
+    ORD_SYM     shift, and go to state 29
+    PRED_SYM    shift, and go to state 30
+    READ_SYM    shift, and go to state 31
+    REPEAT_SYM  shift, and go to state 32
+    RETURN_SYM  shift, and go to state 33
+    STOP_SYM    shift, and go to state 34
+    STRING_SYM  shift, and go to state 35
+    SUCC_SYM    shift, and go to state 36
+    WHILE_SYM   shift, and go to state 37
+    WRITE_SYM   shift, and go to state 38
+
+    $default  reduce using rule 150 (NullStatement)
+
+    Statement              go to state 39
+    Assignment             go to state 40
+    IfStatement            go to state 41
+    IfHead                 go to state 42
+    IfBegin                go to state 43
+    WhileStatement         go to state 44
+    WhileBegin             go to state 45
+    WhileHead              go to state 46
+    RepeatStatement        go to state 47
+    RepeatStatementMiddle  go to state 48
+    RepeatStatementBegin   go to state 49
+    ForStatement           go to state 50
+    ForInc                 go to state 51
+    ForIncGuts             go to state 52
+    ForDec                 go to state 53
+    ForDecGuts             go to state 54
+    ForBegin               go to state 55
+    StopStatement          go to state 56
+    ReturnStatement        go to state 57
+    ReadStatement          go to state 58
+    WriteStatement         go to state 59
+    ProcedureCall          go to state 60
+    Expression             go to state 61
+    FunctionCall           go to state 62
+    LValue                 go to state 63
+    NullStatement          go to state 64
+
+
+State 14
+
+    1 Program: ProgramStart Block DOT_SYM .
+
+    $default  reduce using rule 1 (Program)
+
+
+State 15
+
+   29 TypeDecl: TYPE_SYM TypeDecls . IDENT_SYM EQ_SYM Type SEMICOLON_SYM
+   31 TypeDecls: TypeDecls . IDENT_SYM EQ_SYM Type SEMICOLON_SYM
+
+    IDENT_SYM  shift, and go to state 65
+
+
+State 16
+
+   44 VarDecl: VAR_SYM . VarDecls IdentList COLON_SYM Type SEMICOLON_SYM
+
+    $default  reduce using rule 45 (VarDecls)
+
+    VarDecls  go to state 66
+
+
+State 17
+
+    2 ProgramStart: ConstDecl TypeDecl VarDecl . Optional_ProcOrFuncDecls
+
+    $default  reduce using rule 9 (Optional_ProcOrFuncDecls)
+
+    Optional_ProcOrFuncDecls  go to state 67
+
+
+State 18
+
+    4 ConstDecl: CONST_SYM ConstDecls IDENT_SYM EQ_SYM . ConstExpression SEMICOLON_SYM
+    5 ConstDecls: ConstDecls IDENT_SYM EQ_SYM . ConstExpression SEMICOLON_SYM
+
+    CHAR_SYM    shift, and go to state 68
+    IDENT_SYM   shift, and go to state 69
+    INT_SYM     shift, and go to state 70
+    LPAREN_SYM  shift, and go to state 71
+    MINUS_SYM   shift, and go to state 72
+    NOT_SYM     shift, and go to state 73
+    STRING_SYM  shift, and go to state 74
+
+    ConstExpression  go to state 75
+
+
+State 19
+
+   27 Block: BEGIN_SYM StatementSequence END_SYM .
+
+    $default  reduce using rule 27 (Block)
+
+
+State 20
+
+  115 Expression: CHAR_SYM .
+
+    $default  reduce using rule 115 (Expression)
+
+
+State 21
+
+  124 Expression: CHR_SYM . LPAREN_SYM Expression RPAREN_SYM
+
+    LPAREN_SYM  shift, and go to state 76
+
+
+State 22
+
+   85 ForBegin: FOR_SYM . IDENT_SYM ASSIGN_SYM Expression
+
+    IDENT_SYM  shift, and go to state 77
+
+
+State 23
+
+   95 ProcedureCall: IDENT_SYM . LPAREN_SYM Optional_Arguments RPAREN_SYM
+  145 FunctionCall: IDENT_SYM . LPAREN_SYM Optional_Arguments RPAREN_SYM
+  146 LValue: IDENT_SYM . LValues
+
+    DOT_SYM       shift, and go to state 78
+    LBRACKET_SYM  shift, and go to state 79
+    LPAREN_SYM    shift, and go to state 80
+
+    $default  reduce using rule 147 (LValues)
+
+    LValues  go to state 81
+
+
+State 24
+
+   65 IfBegin: IF_SYM . Expression
+
+    CHAR_SYM    shift, and go to state 20
+    CHR_SYM     shift, and go to state 21
+    IDENT_SYM   shift, and go to state 82
+    INT_SYM     shift, and go to state 25
+    LPAREN_SYM  shift, and go to state 26
+    MINUS_SYM   shift, and go to state 27
+    NOT_SYM     shift, and go to state 28
+    ORD_SYM     shift, and go to state 29
+    PRED_SYM    shift, and go to state 30
+    STRING_SYM  shift, and go to state 35
+    SUCC_SYM    shift, and go to state 36
+
+    Expression    go to state 83
+    FunctionCall  go to state 62
+    LValue        go to state 84
+
+
+State 25
+
+  114 Expression: INT_SYM .
+
+    $default  reduce using rule 114 (Expression)
+
+
+State 26
+
+  118 Expression: LPAREN_SYM . Expression RPAREN_SYM
+
+    CHAR_SYM    shift, and go to state 20
+    CHR_SYM     shift, and go to state 21
+    IDENT_SYM   shift, and go to state 82
+    INT_SYM     shift, and go to state 25
+    LPAREN_SYM  shift, and go to state 26
+    MINUS_SYM   shift, and go to state 27
+    NOT_SYM     shift, and go to state 28
+    ORD_SYM     shift, and go to state 29
+    PRED_SYM    shift, and go to state 30
+    STRING_SYM  shift, and go to state 35
+    SUCC_SYM    shift, and go to state 36
+
+    Expression    go to state 85
+    FunctionCall  go to state 62
+    LValue        go to state 84
+
+
+State 27
+
+  119 Expression: MINUS_SYM . Expression
+
+    CHAR_SYM    shift, and go to state 20
+    CHR_SYM     shift, and go to state 21
+    IDENT_SYM   shift, and go to state 82
+    INT_SYM     shift, and go to state 25
+    LPAREN_SYM  shift, and go to state 26
+    MINUS_SYM   shift, and go to state 27
+    NOT_SYM     shift, and go to state 28
+    ORD_SYM     shift, and go to state 29
+    PRED_SYM    shift, and go to state 30
+    STRING_SYM  shift, and go to state 35
+    SUCC_SYM    shift, and go to state 36
+
+    Expression    go to state 86
+    FunctionCall  go to state 62
+    LValue        go to state 84
+
+
+State 28
+
+  120 Expression: NOT_SYM . Expression
+
+    CHAR_SYM    shift, and go to state 20
+    CHR_SYM     shift, and go to state 21
+    IDENT_SYM   shift, and go to state 82
+    INT_SYM     shift, and go to state 25
+    LPAREN_SYM  shift, and go to state 26
+    MINUS_SYM   shift, and go to state 27
+    NOT_SYM     shift, and go to state 28
+    ORD_SYM     shift, and go to state 29
+    PRED_SYM    shift, and go to state 30
+    STRING_SYM  shift, and go to state 35
+    SUCC_SYM    shift, and go to state 36
+
+    Expression    go to state 87
+    FunctionCall  go to state 62
+    LValue        go to state 84
+
+
+State 29
+
+  121 Expression: ORD_SYM . LPAREN_SYM Expression RPAREN_SYM
+
+    LPAREN_SYM  shift, and go to state 88
+
+
+State 30
+
+  122 Expression: PRED_SYM . LPAREN_SYM Expression RPAREN_SYM
+
+    LPAREN_SYM  shift, and go to state 89
+
+
+State 31
+
+   89 ReadStatement: READ_SYM . LPAREN_SYM ReadArgs LValue RPAREN_SYM
+
+    LPAREN_SYM  shift, and go to state 90
+
+
+State 32
+
+   78 RepeatStatementBegin: REPEAT_SYM .
+
+    $default  reduce using rule 78 (RepeatStatementBegin)
+
+
+State 33
+
+   87 ReturnStatement: RETURN_SYM . Expression
+   88                | RETURN_SYM .
+
+    CHAR_SYM    shift, and go to state 20
+    CHR_SYM     shift, and go to state 21
+    IDENT_SYM   shift, and go to state 82
+    INT_SYM     shift, and go to state 25
+    LPAREN_SYM  shift, and go to state 26
+    MINUS_SYM   shift, and go to state 27
+    NOT_SYM     shift, and go to state 28
+    ORD_SYM     shift, and go to state 29
+    PRED_SYM    shift, and go to state 30
+    STRING_SYM  shift, and go to state 35
+    SUCC_SYM    shift, and go to state 36
+
+    $default  reduce using rule 88 (ReturnStatement)
+
+    Expression    go to state 91
+    FunctionCall  go to state 62
+    LValue        go to state 84
+
+
+State 34
+
+   86 StopStatement: STOP_SYM .
+
+    $default  reduce using rule 86 (StopStatement)
+
+
+State 35
+
+  116 Expression: STRING_SYM .
+
+    $default  reduce using rule 116 (Expression)
+
+
+State 36
+
+  123 Expression: SUCC_SYM . LPAREN_SYM Expression RPAREN_SYM
+
+    LPAREN_SYM  shift, and go to state 92
+
+
+State 37
+
+   74 WhileBegin: WHILE_SYM .
+
+    $default  reduce using rule 74 (WhileBegin)
+
+
+State 38
+
+   92 WriteStatement: WRITE_SYM . LPAREN_SYM WriteArgs Expression RPAREN_SYM
+
+    LPAREN_SYM  shift, and go to state 93
+
+
+State 39
+
+   47 StatementSequence: StatementSequences Statement .
+   49 StatementSequences: StatementSequences Statement . SEMICOLON_SYM
+
+    SEMICOLON_SYM  shift, and go to state 94
+
+    $default  reduce using rule 47 (StatementSequence)
+
+
+State 40
+
+   50 Statement: Assignment .
+
+    $default  reduce using rule 50 (Statement)
+
+
+State 41
+
+   51 Statement: IfStatement .
+
+    $default  reduce using rule 51 (Statement)
+
+
+State 42
+
+   63 IfStatement: IfHead . ElseIfList ElseClause END_SYM
+
+    $default  reduce using rule 66 (ElseIfList)
+
+    ElseIfList  go to state 95
+
+
+State 43
+
+   64 IfHead: IfBegin . THEN_SYM StatementSequence
+
+    THEN_SYM  shift, and go to state 96
+
+
+State 44
+
+   52 Statement: WhileStatement .
+
+    $default  reduce using rule 52 (Statement)
+
+
+State 45
+
+   75 WhileHead: WhileBegin . Expression
+
+    CHAR_SYM    shift, and go to state 20
+    CHR_SYM     shift, and go to state 21
+    IDENT_SYM   shift, and go to state 82
+    INT_SYM     shift, and go to state 25
+    LPAREN_SYM  shift, and go to state 26
+    MINUS_SYM   shift, and go to state 27
+    NOT_SYM     shift, and go to state 28
+    ORD_SYM     shift, and go to state 29
+    PRED_SYM    shift, and go to state 30
+    STRING_SYM  shift, and go to state 35
+    SUCC_SYM    shift, and go to state 36
+
+    Expression    go to state 97
+    FunctionCall  go to state 62
+    LValue        go to state 84
+
+
+State 46
+
+   73 WhileStatement: WhileHead . DO_SYM StatementSequence END_SYM
+
+    DO_SYM  shift, and go to state 98
+
+
+State 47
+
+   53 Statement: RepeatStatement .
+
+    $default  reduce using rule 53 (Statement)
+
+
+State 48
+
+   76 RepeatStatement: RepeatStatementMiddle . UNTIL_SYM Expression
+
+    UNTIL_SYM  shift, and go to state 99
+
+
+State 49
+
+   77 RepeatStatementMiddle: RepeatStatementBegin . StatementSequence
+
+    $default  reduce using rule 48 (StatementSequences)
+
+    StatementSequence   go to state 100
+    StatementSequences  go to state 13
+
+
+State 50
+
+   54 Statement: ForStatement .
+
+    $default  reduce using rule 54 (Statement)
+
+
+State 51
+
+   79 ForStatement: ForInc .
+
+    $default  reduce using rule 79 (ForStatement)
+
+
+State 52
+
+   81 ForInc: ForIncGuts . DO_SYM StatementSequence END_SYM
+
+    DO_SYM  shift, and go to state 101
+
+
+State 53
+
+   80 ForStatement: ForDec .
+
+    $default  reduce using rule 80 (ForStatement)
+
+
+State 54
+
+   83 ForDec: ForDecGuts . DO_SYM StatementSequence END_SYM
+
+    DO_SYM  shift, and go to state 102
+
+
+State 55
+
+   82 ForIncGuts: ForBegin . TO_SYM Expression
+   84 ForDecGuts: ForBegin . DOWNTO_SYM Expression
+
+    DOWNTO_SYM  shift, and go to state 103
+    TO_SYM      shift, and go to state 104
+
+
+State 56
+
+   55 Statement: StopStatement .
+
+    $default  reduce using rule 55 (Statement)
+
+
+State 57
+
+   56 Statement: ReturnStatement .
+
+    $default  reduce using rule 56 (Statement)
+
+
+State 58
+
+   57 Statement: ReadStatement .
+
+    $default  reduce using rule 57 (Statement)
+
+
+State 59
+
+   58 Statement: WriteStatement .
+
+    $default  reduce using rule 58 (Statement)
+
+
+State 60
+
+   59 Statement: ProcedureCall .
+
+    $default  reduce using rule 59 (Statement)
+
+
+State 61
+
+   60 Statement: Expression .
+  101 Expression: Expression . AND_SYM Expression
+  102           | Expression . DIV_SYM Expression
+  103           | Expression . EQ_SYM Expression
+  104           | Expression . GTE_SYM Expression
+  105           | Expression . GT_SYM Expression
+  106           | Expression . LTE_SYM Expression
+  107           | Expression . LT_SYM Expression
+  108           | Expression . MINUS_SYM Expression
+  109           | Expression . MOD_SYM Expression
+  110           | Expression . MULT_SYM Expression
+  111           | Expression . NEQ_SYM Expression
+  112           | Expression . OR_SYM Expression
+  113           | Expression . PLUS_SYM Expression
+
+    DIV_SYM    shift, and go to state 105
+    EQ_SYM     shift, and go to state 106
+    GTE_SYM    shift, and go to state 107
+    GT_SYM     shift, and go to state 108
+    LTE_SYM    shift, and go to state 109
+    LT_SYM     shift, and go to state 110
+    MINUS_SYM  shift, and go to state 111
+    MOD_SYM    shift, and go to state 112
+    MULT_SYM   shift, and go to state 113
+    PLUS_SYM   shift, and go to state 114
+    AND_SYM    shift, and go to state 115
+    OR_SYM     shift, and go to state 116
+    NEQ_SYM    shift, and go to state 117
+
+    $default  reduce using rule 60 (Statement)
+
+
+State 62
+
+  117 Expression: FunctionCall .
+
+    $default  reduce using rule 117 (Expression)
+
+
+State 63
+
+   62 Assignment: LValue . ASSIGN_SYM Expression
+  100 Expression: LValue .
+
+    ASSIGN_SYM  shift, and go to state 118
+
+    $default  reduce using rule 100 (Expression)
+
+
+State 64
+
+   61 Statement: NullStatement .
+
+    $default  reduce using rule 61 (Statement)
+
+
+State 65
+
+   29 TypeDecl: TYPE_SYM TypeDecls IDENT_SYM . EQ_SYM Type SEMICOLON_SYM
+   31 TypeDecls: TypeDecls IDENT_SYM . EQ_SYM Type SEMICOLON_SYM
+
+    EQ_SYM  shift, and go to state 119
+
+
+State 66
+
+   44 VarDecl: VAR_SYM VarDecls . IdentList COLON_SYM Type SEMICOLON_SYM
+   46 VarDecls: VarDecls . IdentList COLON_SYM Type SEMICOLON_SYM
+
+    $default  reduce using rule 41 (IdentLists)
+
+    IdentList   go to state 120
+    IdentLists  go to state 121
+
+
+State 67
+
+    2 ProgramStart: ConstDecl TypeDecl VarDecl Optional_ProcOrFuncDecls .
+    7 Optional_ProcOrFuncDecls: Optional_ProcOrFuncDecls . ProcedureDecl
+    8                         | Optional_ProcOrFuncDecls . FunctionDecl
+
+    FUNCTION_SYM   shift, and go to state 122
+    PROCEDURE_SYM  shift, and go to state 123
+
+    $default  reduce using rule 2 (ProgramStart)
+
+    ProcedureDecl  go to state 124
+    FunctionDecl   go to state 125
+
+
+State 68
+
+  126 ConstExpression: CHAR_SYM .
+
+    $default  reduce using rule 126 (ConstExpression)
+
+
+State 69
+
+  128 ConstExpression: IDENT_SYM .
+
+    $default  reduce using rule 128 (ConstExpression)
+
+
+State 70
+
+  125 ConstExpression: INT_SYM .
+
+    $default  reduce using rule 125 (ConstExpression)
+
+
+State 71
+
+  142 ConstExpression: LPAREN_SYM . ConstExpression RPAREN_SYM
+
+    CHAR_SYM    shift, and go to state 68
+    IDENT_SYM   shift, and go to state 69
+    INT_SYM     shift, and go to state 70
+    LPAREN_SYM  shift, and go to state 71
+    MINUS_SYM   shift, and go to state 72
+    NOT_SYM     shift, and go to state 73
+    STRING_SYM  shift, and go to state 74
+
+    ConstExpression  go to state 126
+
+
+State 72
+
+  144 ConstExpression: MINUS_SYM . ConstExpression
+
+    CHAR_SYM    shift, and go to state 68
+    IDENT_SYM   shift, and go to state 69
+    INT_SYM     shift, and go to state 70
+    LPAREN_SYM  shift, and go to state 71
+    MINUS_SYM   shift, and go to state 72
+    NOT_SYM     shift, and go to state 73
+    STRING_SYM  shift, and go to state 74
+
+    ConstExpression  go to state 127
+
+
+State 73
+
+  143 ConstExpression: NOT_SYM . ConstExpression
+
+    CHAR_SYM    shift, and go to state 68
+    IDENT_SYM   shift, and go to state 69
+    INT_SYM     shift, and go to state 70
+    LPAREN_SYM  shift, and go to state 71
+    MINUS_SYM   shift, and go to state 72
+    NOT_SYM     shift, and go to state 73
+    STRING_SYM  shift, and go to state 74
+
+    ConstExpression  go to state 128
+
+
+State 74
+
+  127 ConstExpression: STRING_SYM .
+
+    $default  reduce using rule 127 (ConstExpression)
+
+
+State 75
+
+    4 ConstDecl: CONST_SYM ConstDecls IDENT_SYM EQ_SYM ConstExpression . SEMICOLON_SYM
+    5 ConstDecls: ConstDecls IDENT_SYM EQ_SYM ConstExpression . SEMICOLON_SYM
+  129 ConstExpression: ConstExpression . AND_SYM ConstExpression
+  130                | ConstExpression . DIV_SYM ConstExpression
+  131                | ConstExpression . EQ_SYM ConstExpression
+  132                | ConstExpression . GTE_SYM ConstExpression
+  133                | ConstExpression . GT_SYM ConstExpression
+  134                | ConstExpression . LTE_SYM ConstExpression
+  135                | ConstExpression . LT_SYM ConstExpression
+  136                | ConstExpression . MINUS_SYM ConstExpression
+  137                | ConstExpression . MOD_SYM ConstExpression
+  138                | ConstExpression . MULT_SYM ConstExpression
+  139                | ConstExpression . NEQ_SYM ConstExpression
+  140                | ConstExpression . OR_SYM ConstExpression
+  141                | ConstExpression . PLUS_SYM ConstExpression
+
+    DIV_SYM        shift, and go to state 129
+    EQ_SYM         shift, and go to state 130
+    GTE_SYM        shift, and go to state 131
+    GT_SYM         shift, and go to state 132
+    LTE_SYM        shift, and go to state 133
+    LT_SYM         shift, and go to state 134
+    MINUS_SYM      shift, and go to state 135
+    MOD_SYM        shift, and go to state 136
+    MULT_SYM       shift, and go to state 137
+    PLUS_SYM       shift, and go to state 138
+    SEMICOLON_SYM  shift, and go to state 139
+    AND_SYM        shift, and go to state 140
+    OR_SYM         shift, and go to state 141
+    NEQ_SYM        shift, and go to state 142
+
+
+State 76
+
+  124 Expression: CHR_SYM LPAREN_SYM . Expression RPAREN_SYM
+
+    CHAR_SYM    shift, and go to state 20
+    CHR_SYM     shift, and go to state 21
+    IDENT_SYM   shift, and go to state 82
+    INT_SYM     shift, and go to state 25
+    LPAREN_SYM  shift, and go to state 26
+    MINUS_SYM   shift, and go to state 27
+    NOT_SYM     shift, and go to state 28
+    ORD_SYM     shift, and go to state 29
+    PRED_SYM    shift, and go to state 30
+    STRING_SYM  shift, and go to state 35
+    SUCC_SYM    shift, and go to state 36
+
+    Expression    go to state 143
+    FunctionCall  go to state 62
+    LValue        go to state 84
+
+
+State 77
+
+   85 ForBegin: FOR_SYM IDENT_SYM . ASSIGN_SYM Expression
+
+    ASSIGN_SYM  shift, and go to state 144
+
+
+State 78
+
+  148 LValues: DOT_SYM . IDENT_SYM LValues
+
+    IDENT_SYM  shift, and go to state 145
+
+
+State 79
+
+  149 LValues: LBRACKET_SYM . Expression RBRACKET_SYM LValues
+
+    CHAR_SYM    shift, and go to state 20
+    CHR_SYM     shift, and go to state 21
+    IDENT_SYM   shift, and go to state 82
+    INT_SYM     shift, and go to state 25
+    LPAREN_SYM  shift, and go to state 26
+    MINUS_SYM   shift, and go to state 27
+    NOT_SYM     shift, and go to state 28
+    ORD_SYM     shift, and go to state 29
+    PRED_SYM    shift, and go to state 30
+    STRING_SYM  shift, and go to state 35
+    SUCC_SYM    shift, and go to state 36
+
+    Expression    go to state 146
+    FunctionCall  go to state 62
+    LValue        go to state 84
+
+
+State 80
+
+   95 ProcedureCall: IDENT_SYM LPAREN_SYM . Optional_Arguments RPAREN_SYM
+  145 FunctionCall: IDENT_SYM LPAREN_SYM . Optional_Arguments RPAREN_SYM
+
+    CHAR_SYM    shift, and go to state 20
+    CHR_SYM     shift, and go to state 21
+    IDENT_SYM   shift, and go to state 82
+    INT_SYM     shift, and go to state 25
+    LPAREN_SYM  shift, and go to state 26
+    MINUS_SYM   shift, and go to state 27
+    NOT_SYM     shift, and go to state 28
+    ORD_SYM     shift, and go to state 29
+    PRED_SYM    shift, and go to state 30
+    STRING_SYM  shift, and go to state 35
+    SUCC_SYM    shift, and go to state 36
+
+    $default  reduce using rule 97 (Optional_Arguments)
+
+    Optional_Arguments  go to state 147
+    Arguments           go to state 148
+    Expression          go to state 149
+    FunctionCall        go to state 62
+    LValue              go to state 84
+
+
+State 81
+
+  146 LValue: IDENT_SYM LValues .
+
+    $default  reduce using rule 146 (LValue)
+
+
+State 82
+
+  145 FunctionCall: IDENT_SYM . LPAREN_SYM Optional_Arguments RPAREN_SYM
+  146 LValue: IDENT_SYM . LValues
+
+    DOT_SYM       shift, and go to state 78
+    LBRACKET_SYM  shift, and go to state 79
+    LPAREN_SYM    shift, and go to state 150
+
+    $default  reduce using rule 147 (LValues)
+
+    LValues  go to state 81
+
+
+State 83
+
+   65 IfBegin: IF_SYM Expression .
+  101 Expression: Expression . AND_SYM Expression
+  102           | Expression . DIV_SYM Expression
+  103           | Expression . EQ_SYM Expression
+  104           | Expression . GTE_SYM Expression
+  105           | Expression . GT_SYM Expression
+  106           | Expression . LTE_SYM Expression
+  107           | Expression . LT_SYM Expression
+  108           | Expression . MINUS_SYM Expression
+  109           | Expression . MOD_SYM Expression
+  110           | Expression . MULT_SYM Expression
+  111           | Expression . NEQ_SYM Expression
+  112           | Expression . OR_SYM Expression
+  113           | Expression . PLUS_SYM Expression
+
+    DIV_SYM    shift, and go to state 105
+    EQ_SYM     shift, and go to state 106
+    GTE_SYM    shift, and go to state 107
+    GT_SYM     shift, and go to state 108
+    LTE_SYM    shift, and go to state 109
+    LT_SYM     shift, and go to state 110
+    MINUS_SYM  shift, and go to state 111
+    MOD_SYM    shift, and go to state 112
+    MULT_SYM   shift, and go to state 113
+    PLUS_SYM   shift, and go to state 114
+    AND_SYM    shift, and go to state 115
+    OR_SYM     shift, and go to state 116
+    NEQ_SYM    shift, and go to state 117
+
+    $default  reduce using rule 65 (IfBegin)
+
+
+State 84
+
+  100 Expression: LValue .
+
+    $default  reduce using rule 100 (Expression)
+
+
+State 85
+
+  101 Expression: Expression . AND_SYM Expression
+  102           | Expression . DIV_SYM Expression
+  103           | Expression . EQ_SYM Expression
+  104           | Expression . GTE_SYM Expression
+  105           | Expression . GT_SYM Expression
+  106           | Expression . LTE_SYM Expression
+  107           | Expression . LT_SYM Expression
+  108           | Expression . MINUS_SYM Expression
+  109           | Expression . MOD_SYM Expression
+  110           | Expression . MULT_SYM Expression
+  111           | Expression . NEQ_SYM Expression
+  112           | Expression . OR_SYM Expression
+  113           | Expression . PLUS_SYM Expression
+  118           | LPAREN_SYM Expression . RPAREN_SYM
+
+    DIV_SYM     shift, and go to state 105
+    EQ_SYM      shift, and go to state 106
+    GTE_SYM     shift, and go to state 107
+    GT_SYM      shift, and go to state 108
+    LTE_SYM     shift, and go to state 109
+    LT_SYM      shift, and go to state 110
+    MINUS_SYM   shift, and go to state 111
+    MOD_SYM     shift, and go to state 112
+    MULT_SYM    shift, and go to state 113
+    PLUS_SYM    shift, and go to state 114
+    RPAREN_SYM  shift, and go to state 151
+    AND_SYM     shift, and go to state 115
+    OR_SYM      shift, and go to state 116
+    NEQ_SYM     shift, and go to state 117
+
+
+State 86
+
+  101 Expression: Expression . AND_SYM Expression
+  102           | Expression . DIV_SYM Expression
+  103           | Expression . EQ_SYM Expression
+  104           | Expression . GTE_SYM Expression
+  105           | Expression . GT_SYM Expression
+  106           | Expression . LTE_SYM Expression
+  107           | Expression . LT_SYM Expression
+  108           | Expression . MINUS_SYM Expression
+  109           | Expression . MOD_SYM Expression
+  110           | Expression . MULT_SYM Expression
+  111           | Expression . NEQ_SYM Expression
+  112           | Expression . OR_SYM Expression
+  113           | Expression . PLUS_SYM Expression
+  119           | MINUS_SYM Expression .
+
+    $default  reduce using rule 119 (Expression)
+
+
+State 87
+
+  101 Expression: Expression . AND_SYM Expression
+  102           | Expression . DIV_SYM Expression
+  103           | Expression . EQ_SYM Expression
+  104           | Expression . GTE_SYM Expression
+  105           | Expression . GT_SYM Expression
+  106           | Expression . LTE_SYM Expression
+  107           | Expression . LT_SYM Expression
+  108           | Expression . MINUS_SYM Expression
+  109           | Expression . MOD_SYM Expression
+  110           | Expression . MULT_SYM Expression
+  111           | Expression . NEQ_SYM Expression
+  112           | Expression . OR_SYM Expression
+  113           | Expression . PLUS_SYM Expression
+  120           | NOT_SYM Expression .
+
+    DIV_SYM    shift, and go to state 105
+    EQ_SYM     shift, and go to state 106
+    GTE_SYM    shift, and go to state 107
+    GT_SYM     shift, and go to state 108
+    LTE_SYM    shift, and go to state 109
+    LT_SYM     shift, and go to state 110
+    MINUS_SYM  shift, and go to state 111
+    MOD_SYM    shift, and go to state 112
+    MULT_SYM   shift, and go to state 113
+    PLUS_SYM   shift, and go to state 114
+    NEQ_SYM    shift, and go to state 117
+
+    $default  reduce using rule 120 (Expression)
+
+
+State 88
+
+  121 Expression: ORD_SYM LPAREN_SYM . Expression RPAREN_SYM
+
+    CHAR_SYM    shift, and go to state 20
+    CHR_SYM     shift, and go to state 21
+    IDENT_SYM   shift, and go to state 82
+    INT_SYM     shift, and go to state 25
+    LPAREN_SYM  shift, and go to state 26
+    MINUS_SYM   shift, and go to state 27
+    NOT_SYM     shift, and go to state 28
+    ORD_SYM     shift, and go to state 29
+    PRED_SYM    shift, and go to state 30
+    STRING_SYM  shift, and go to state 35
+    SUCC_SYM    shift, and go to state 36
+
+    Expression    go to state 152
+    FunctionCall  go to state 62
+    LValue        go to state 84
+
+
+State 89
+
+  122 Expression: PRED_SYM LPAREN_SYM . Expression RPAREN_SYM
+
+    CHAR_SYM    shift, and go to state 20
+    CHR_SYM     shift, and go to state 21
+    IDENT_SYM   shift, and go to state 82
+    INT_SYM     shift, and go to state 25
+    LPAREN_SYM  shift, and go to state 26
+    MINUS_SYM   shift, and go to state 27
+    NOT_SYM     shift, and go to state 28
+    ORD_SYM     shift, and go to state 29
+    PRED_SYM    shift, and go to state 30
+    STRING_SYM  shift, and go to state 35
+    SUCC_SYM    shift, and go to state 36
+
+    Expression    go to state 153
+    FunctionCall  go to state 62
+    LValue        go to state 84
+
+
+State 90
+
+   89 ReadStatement: READ_SYM LPAREN_SYM . ReadArgs LValue RPAREN_SYM
+
+    $default  reduce using rule 90 (ReadArgs)
+
+    ReadArgs  go to state 154
+
+
+State 91
+
+   87 ReturnStatement: RETURN_SYM Expression .
+  101 Expression: Expression . AND_SYM Expression
+  102           | Expression . DIV_SYM Expression
+  103           | Expression . EQ_SYM Expression
+  104           | Expression . GTE_SYM Expression
+  105           | Expression . GT_SYM Expression
+  106           | Expression . LTE_SYM Expression
+  107           | Expression . LT_SYM Expression
+  108           | Expression . MINUS_SYM Expression
+  109           | Expression . MOD_SYM Expression
+  110           | Expression . MULT_SYM Expression
+  111           | Expression . NEQ_SYM Expression
+  112           | Expression . OR_SYM Expression
+  113           | Expression . PLUS_SYM Expression
+
+    DIV_SYM    shift, and go to state 105
+    EQ_SYM     shift, and go to state 106
+    GTE_SYM    shift, and go to state 107
+    GT_SYM     shift, and go to state 108
+    LTE_SYM    shift, and go to state 109
+    LT_SYM     shift, and go to state 110
+    MINUS_SYM  shift, and go to state 111
+    MOD_SYM    shift, and go to state 112
+    MULT_SYM   shift, and go to state 113
+    PLUS_SYM   shift, and go to state 114
+    AND_SYM    shift, and go to state 115
+    OR_SYM     shift, and go to state 116
+    NEQ_SYM    shift, and go to state 117
+
+    $default  reduce using rule 87 (ReturnStatement)
+
+
+State 92
+
+  123 Expression: SUCC_SYM LPAREN_SYM . Expression RPAREN_SYM
+
+    CHAR_SYM    shift, and go to state 20
+    CHR_SYM     shift, and go to state 21
+    IDENT_SYM   shift, and go to state 82
+    INT_SYM     shift, and go to state 25
+    LPAREN_SYM  shift, and go to state 26
+    MINUS_SYM   shift, and go to state 27
+    NOT_SYM     shift, and go to state 28
+    ORD_SYM     shift, and go to state 29
+    PRED_SYM    shift, and go to state 30
+    STRING_SYM  shift, and go to state 35
+    SUCC_SYM    shift, and go to state 36
+
+    Expression    go to state 155
+    FunctionCall  go to state 62
+    LValue        go to state 84
+
+
+State 93
+
+   92 WriteStatement: WRITE_SYM LPAREN_SYM . WriteArgs Expression RPAREN_SYM
+
+    $default  reduce using rule 93 (WriteArgs)
+
+    WriteArgs  go to state 156
+
+
+State 94
+
+   49 StatementSequences: StatementSequences Statement SEMICOLON_SYM .
+
+    $default  reduce using rule 49 (StatementSequences)
+
+
+State 95
+
+   63 IfStatement: IfHead ElseIfList . ElseClause END_SYM
+   67 ElseIfList: ElseIfList . ElseIfHead THEN_SYM StatementSequence
+
+    ELSEIF_SYM  shift, and go to state 157
+    ELSE_SYM    shift, and go to state 158
+
+    $default  reduce using rule 70 (ElseClause)
+
+    ElseIfHead  go to state 159
+    ElseBegin   go to state 160
+    ElseClause  go to state 161
+    ElseStart   go to state 162
+
+
+State 96
+
+   64 IfHead: IfBegin THEN_SYM . StatementSequence
+
+    $default  reduce using rule 48 (StatementSequences)
+
+    StatementSequence   go to state 163
+    StatementSequences  go to state 13
+
+
+State 97
+
+   75 WhileHead: WhileBegin Expression .
+  101 Expression: Expression . AND_SYM Expression
+  102           | Expression . DIV_SYM Expression
+  103           | Expression . EQ_SYM Expression
+  104           | Expression . GTE_SYM Expression
+  105           | Expression . GT_SYM Expression
+  106           | Expression . LTE_SYM Expression
+  107           | Expression . LT_SYM Expression
+  108           | Expression . MINUS_SYM Expression
+  109           | Expression . MOD_SYM Expression
+  110           | Expression . MULT_SYM Expression
+  111           | Expression . NEQ_SYM Expression
+  112           | Expression . OR_SYM Expression
+  113           | Expression . PLUS_SYM Expression
+
+    DIV_SYM    shift, and go to state 105
+    EQ_SYM     shift, and go to state 106
+    GTE_SYM    shift, and go to state 107
+    GT_SYM     shift, and go to state 108
+    LTE_SYM    shift, and go to state 109
+    LT_SYM     shift, and go to state 110
+    MINUS_SYM  shift, and go to state 111
+    MOD_SYM    shift, and go to state 112
+    MULT_SYM   shift, and go to state 113
+    PLUS_SYM   shift, and go to state 114
+    AND_SYM    shift, and go to state 115
+    OR_SYM     shift, and go to state 116
+    NEQ_SYM    shift, and go to state 117
+
+    $default  reduce using rule 75 (WhileHead)
+
+
+State 98
+
+   73 WhileStatement: WhileHead DO_SYM . StatementSequence END_SYM
+
+    $default  reduce using rule 48 (StatementSequences)
+
+    StatementSequence   go to state 164
+    StatementSequences  go to state 13
+
+
+State 99
+
+   76 RepeatStatement: RepeatStatementMiddle UNTIL_SYM . Expression
+
+    CHAR_SYM    shift, and go to state 20
+    CHR_SYM     shift, and go to state 21
+    IDENT_SYM   shift, and go to state 82
+    INT_SYM     shift, and go to state 25
+    LPAREN_SYM  shift, and go to state 26
+    MINUS_SYM   shift, and go to state 27
+    NOT_SYM     shift, and go to state 28
+    ORD_SYM     shift, and go to state 29
+    PRED_SYM    shift, and go to state 30
+    STRING_SYM  shift, and go to state 35
+    SUCC_SYM    shift, and go to state 36
+
+    Expression    go to state 165
+    FunctionCall  go to state 62
+    LValue        go to state 84
+
+
+State 100
+
+   77 RepeatStatementMiddle: RepeatStatementBegin StatementSequence .
+
+    $default  reduce using rule 77 (RepeatStatementMiddle)
+
+
+State 101
+
+   81 ForInc: ForIncGuts DO_SYM . StatementSequence END_SYM
+
+    $default  reduce using rule 48 (StatementSequences)
+
+    StatementSequence   go to state 166
+    StatementSequences  go to state 13
+
+
+State 102
+
+   83 ForDec: ForDecGuts DO_SYM . StatementSequence END_SYM
+
+    $default  reduce using rule 48 (StatementSequences)
+
+    StatementSequence   go to state 167
+    StatementSequences  go to state 13
+
+
+State 103
+
+   84 ForDecGuts: ForBegin DOWNTO_SYM . Expression
+
+    CHAR_SYM    shift, and go to state 20
+    CHR_SYM     shift, and go to state 21
+    IDENT_SYM   shift, and go to state 82
+    INT_SYM     shift, and go to state 25
+    LPAREN_SYM  shift, and go to state 26
+    MINUS_SYM   shift, and go to state 27
+    NOT_SYM     shift, and go to state 28
+    ORD_SYM     shift, and go to state 29
+    PRED_SYM    shift, and go to state 30
+    STRING_SYM  shift, and go to state 35
+    SUCC_SYM    shift, and go to state 36
+
+    Expression    go to state 168
+    FunctionCall  go to state 62
+    LValue        go to state 84
+
+
+State 104
+
+   82 ForIncGuts: ForBegin TO_SYM . Expression
+
+    CHAR_SYM    shift, and go to state 20
+    CHR_SYM     shift, and go to state 21
+    IDENT_SYM   shift, and go to state 82
+    INT_SYM     shift, and go to state 25
+    LPAREN_SYM  shift, and go to state 26
+    MINUS_SYM   shift, and go to state 27
+    NOT_SYM     shift, and go to state 28
+    ORD_SYM     shift, and go to state 29
+    PRED_SYM    shift, and go to state 30
+    STRING_SYM  shift, and go to state 35
+    SUCC_SYM    shift, and go to state 36
+
+    Expression    go to state 169
+    FunctionCall  go to state 62
+    LValue        go to state 84
+
+
+State 105
+
+  102 Expression: Expression DIV_SYM . Expression
+
+    CHAR_SYM    shift, and go to state 20
+    CHR_SYM     shift, and go to state 21
+    IDENT_SYM   shift, and go to state 82
+    INT_SYM     shift, and go to state 25
+    LPAREN_SYM  shift, and go to state 26
+    MINUS_SYM   shift, and go to state 27
+    NOT_SYM     shift, and go to state 28
+    ORD_SYM     shift, and go to state 29
+    PRED_SYM    shift, and go to state 30
+    STRING_SYM  shift, and go to state 35
+    SUCC_SYM    shift, and go to state 36
+
+    Expression    go to state 170
+    FunctionCall  go to state 62
+    LValue        go to state 84
+
+
+State 106
+
+  103 Expression: Expression EQ_SYM . Expression
+
+    CHAR_SYM    shift, and go to state 20
+    CHR_SYM     shift, and go to state 21
+    IDENT_SYM   shift, and go to state 82
+    INT_SYM     shift, and go to state 25
+    LPAREN_SYM  shift, and go to state 26
+    MINUS_SYM   shift, and go to state 27
+    NOT_SYM     shift, and go to state 28
+    ORD_SYM     shift, and go to state 29
+    PRED_SYM    shift, and go to state 30
+    STRING_SYM  shift, and go to state 35
+    SUCC_SYM    shift, and go to state 36
+
+    Expression    go to state 171
+    FunctionCall  go to state 62
+    LValue        go to state 84
+
+
+State 107
+
+  104 Expression: Expression GTE_SYM . Expression
+
+    CHAR_SYM    shift, and go to state 20
+    CHR_SYM     shift, and go to state 21
+    IDENT_SYM   shift, and go to state 82
+    INT_SYM     shift, and go to state 25
+    LPAREN_SYM  shift, and go to state 26
+    MINUS_SYM   shift, and go to state 27
+    NOT_SYM     shift, and go to state 28
+    ORD_SYM     shift, and go to state 29
+    PRED_SYM    shift, and go to state 30
+    STRING_SYM  shift, and go to state 35
+    SUCC_SYM    shift, and go to state 36
+
+    Expression    go to state 172
+    FunctionCall  go to state 62
+    LValue        go to state 84
+
+
+State 108
+
+  105 Expression: Expression GT_SYM . Expression
+
+    CHAR_SYM    shift, and go to state 20
+    CHR_SYM     shift, and go to state 21
+    IDENT_SYM   shift, and go to state 82
+    INT_SYM     shift, and go to state 25
+    LPAREN_SYM  shift, and go to state 26
+    MINUS_SYM   shift, and go to state 27
+    NOT_SYM     shift, and go to state 28
+    ORD_SYM     shift, and go to state 29
+    PRED_SYM    shift, and go to state 30
+    STRING_SYM  shift, and go to state 35
+    SUCC_SYM    shift, and go to state 36
+
+    Expression    go to state 173
+    FunctionCall  go to state 62
+    LValue        go to state 84
+
+
+State 109
+
+  106 Expression: Expression LTE_SYM . Expression
+
+    CHAR_SYM    shift, and go to state 20
+    CHR_SYM     shift, and go to state 21
+    IDENT_SYM   shift, and go to state 82
+    INT_SYM     shift, and go to state 25
+    LPAREN_SYM  shift, and go to state 26
+    MINUS_SYM   shift, and go to state 27
+    NOT_SYM     shift, and go to state 28
+    ORD_SYM     shift, and go to state 29
+    PRED_SYM    shift, and go to state 30
+    STRING_SYM  shift, and go to state 35
+    SUCC_SYM    shift, and go to state 36
+
+    Expression    go to state 174
+    FunctionCall  go to state 62
+    LValue        go to state 84
+
+
+State 110
+
+  107 Expression: Expression LT_SYM . Expression
+
+    CHAR_SYM    shift, and go to state 20
+    CHR_SYM     shift, and go to state 21
+    IDENT_SYM   shift, and go to state 82
+    INT_SYM     shift, and go to state 25
+    LPAREN_SYM  shift, and go to state 26
+    MINUS_SYM   shift, and go to state 27
+    NOT_SYM     shift, and go to state 28
+    ORD_SYM     shift, and go to state 29
+    PRED_SYM    shift, and go to state 30
+    STRING_SYM  shift, and go to state 35
+    SUCC_SYM    shift, and go to state 36
+
+    Expression    go to state 175
+    FunctionCall  go to state 62
+    LValue        go to state 84
+
+
+State 111
+
+  108 Expression: Expression MINUS_SYM . Expression
+
+    CHAR_SYM    shift, and go to state 20
+    CHR_SYM     shift, and go to state 21
+    IDENT_SYM   shift, and go to state 82
+    INT_SYM     shift, and go to state 25
+    LPAREN_SYM  shift, and go to state 26
+    MINUS_SYM   shift, and go to state 27
+    NOT_SYM     shift, and go to state 28
+    ORD_SYM     shift, and go to state 29
+    PRED_SYM    shift, and go to state 30
+    STRING_SYM  shift, and go to state 35
+    SUCC_SYM    shift, and go to state 36
+
+    Expression    go to state 176
+    FunctionCall  go to state 62
+    LValue        go to state 84
+
+
+State 112
+
+  109 Expression: Expression MOD_SYM . Expression
+
+    CHAR_SYM    shift, and go to state 20
+    CHR_SYM     shift, and go to state 21
+    IDENT_SYM   shift, and go to state 82
+    INT_SYM     shift, and go to state 25
+    LPAREN_SYM  shift, and go to state 26
+    MINUS_SYM   shift, and go to state 27
+    NOT_SYM     shift, and go to state 28
+    ORD_SYM     shift, and go to state 29
+    PRED_SYM    shift, and go to state 30
+    STRING_SYM  shift, and go to state 35
+    SUCC_SYM    shift, and go to state 36
+
+    Expression    go to state 177
+    FunctionCall  go to state 62
+    LValue        go to state 84
+
+
+State 113
+
+  110 Expression: Expression MULT_SYM . Expression
+
+    CHAR_SYM    shift, and go to state 20
+    CHR_SYM     shift, and go to state 21
+    IDENT_SYM   shift, and go to state 82
+    INT_SYM     shift, and go to state 25
+    LPAREN_SYM  shift, and go to state 26
+    MINUS_SYM   shift, and go to state 27
+    NOT_SYM     shift, and go to state 28
+    ORD_SYM     shift, and go to state 29
+    PRED_SYM    shift, and go to state 30
+    STRING_SYM  shift, and go to state 35
+    SUCC_SYM    shift, and go to state 36
+
+    Expression    go to state 178
+    FunctionCall  go to state 62
+    LValue        go to state 84
+
+
+State 114
+
+  113 Expression: Expression PLUS_SYM . Expression
+
+    CHAR_SYM    shift, and go to state 20
+    CHR_SYM     shift, and go to state 21
+    IDENT_SYM   shift, and go to state 82
+    INT_SYM     shift, and go to state 25
+    LPAREN_SYM  shift, and go to state 26
+    MINUS_SYM   shift, and go to state 27
+    NOT_SYM     shift, and go to state 28
+    ORD_SYM     shift, and go to state 29
+    PRED_SYM    shift, and go to state 30
+    STRING_SYM  shift, and go to state 35
+    SUCC_SYM    shift, and go to state 36
+
+    Expression    go to state 179
+    FunctionCall  go to state 62
+    LValue        go to state 84
+
+
+State 115
+
+  101 Expression: Expression AND_SYM . Expression
+
+    CHAR_SYM    shift, and go to state 20
+    CHR_SYM     shift, and go to state 21
+    IDENT_SYM   shift, and go to state 82
+    INT_SYM     shift, and go to state 25
+    LPAREN_SYM  shift, and go to state 26
+    MINUS_SYM   shift, and go to state 27
+    NOT_SYM     shift, and go to state 28
+    ORD_SYM     shift, and go to state 29
+    PRED_SYM    shift, and go to state 30
+    STRING_SYM  shift, and go to state 35
+    SUCC_SYM    shift, and go to state 36
+
+    Expression    go to state 180
+    FunctionCall  go to state 62
+    LValue        go to state 84
+
+
+State 116
+
+  112 Expression: Expression OR_SYM . Expression
+
+    CHAR_SYM    shift, and go to state 20
+    CHR_SYM     shift, and go to state 21
+    IDENT_SYM   shift, and go to state 82
+    INT_SYM     shift, and go to state 25
+    LPAREN_SYM  shift, and go to state 26
+    MINUS_SYM   shift, and go to state 27
+    NOT_SYM     shift, and go to state 28
+    ORD_SYM     shift, and go to state 29
+    PRED_SYM    shift, and go to state 30
+    STRING_SYM  shift, and go to state 35
+    SUCC_SYM    shift, and go to state 36
+
+    Expression    go to state 181
+    FunctionCall  go to state 62
+    LValue        go to state 84
+
+
+State 117
+
+  111 Expression: Expression NEQ_SYM . Expression
+
+    CHAR_SYM    shift, and go to state 20
+    CHR_SYM     shift, and go to state 21
+    IDENT_SYM   shift, and go to state 82
+    INT_SYM     shift, and go to state 25
+    LPAREN_SYM  shift, and go to state 26
+    MINUS_SYM   shift, and go to state 27
+    NOT_SYM     shift, and go to state 28
+    ORD_SYM     shift, and go to state 29
+    PRED_SYM    shift, and go to state 30
+    STRING_SYM  shift, and go to state 35
+    SUCC_SYM    shift, and go to state 36
+
+    Expression    go to state 182
+    FunctionCall  go to state 62
+    LValue        go to state 84
+
+
+State 118
+
+   62 Assignment: LValue ASSIGN_SYM . Expression
+
+    CHAR_SYM    shift, and go to state 20
+    CHR_SYM     shift, and go to state 21
+    IDENT_SYM   shift, and go to state 82
+    INT_SYM     shift, and go to state 25
+    LPAREN_SYM  shift, and go to state 26
+    MINUS_SYM   shift, and go to state 27
+    NOT_SYM     shift, and go to state 28
+    ORD_SYM     shift, and go to state 29
+    PRED_SYM    shift, and go to state 30
+    STRING_SYM  shift, and go to state 35
+    SUCC_SYM    shift, and go to state 36
+
+    Expression    go to state 183
+    FunctionCall  go to state 62
+    LValue        go to state 84
+
+
+State 119
+
+   29 TypeDecl: TYPE_SYM TypeDecls IDENT_SYM EQ_SYM . Type SEMICOLON_SYM
+   31 TypeDecls: TypeDecls IDENT_SYM EQ_SYM . Type SEMICOLON_SYM
+
+    ARRAY_SYM   shift, and go to state 184
+    IDENT_SYM   shift, and go to state 185
+    RECORD_SYM  shift, and go to state 186
+
+    Type        go to state 187
+    SimpleType  go to state 188
+    RecordType  go to state 189
+    ArrayType   go to state 190
+
+
+State 120
+
+   44 VarDecl: VAR_SYM VarDecls IdentList . COLON_SYM Type SEMICOLON_SYM
+   46 VarDecls: VarDecls IdentList . COLON_SYM Type SEMICOLON_SYM
+
+    COLON_SYM  shift, and go to state 191
+
+
+State 121
+
+   40 IdentList: IdentLists . IDENT_SYM
+   42 IdentLists: IdentLists . IDENT_SYM COMMA_SYM
+
+    IDENT_SYM  shift, and go to state 192
+
+
+State 122
+
+   12 FunctionDecl: FUNCTION_SYM . IDENT_SYM LPAREN_SYM Optional_FormalParameters RPAREN_SYM COLON_SYM Type SEMICOLON_SYM FORWARD_SYM SEMICOLON_SYM
+   13             | FUNCTION_SYM . IDENT_SYM LPAREN_SYM Optional_FormalParameters RPAREN_SYM COLON_SYM Type SEMICOLON_SYM Body SEMICOLON_SYM
+
+    IDENT_SYM  shift, and go to state 193
+
+
+State 123
+
+   10 ProcedureDecl: PROCEDURE_SYM . IDENT_SYM LPAREN_SYM Optional_FormalParameters RPAREN_SYM SEMICOLON_SYM FORWARD_SYM SEMICOLON_SYM
+   11              | PROCEDURE_SYM . IDENT_SYM LPAREN_SYM Optional_FormalParameters RPAREN_SYM SEMICOLON_SYM Body SEMICOLON_SYM
+
+    IDENT_SYM  shift, and go to state 194
+
+
+State 124
+
+    7 Optional_ProcOrFuncDecls: Optional_ProcOrFuncDecls ProcedureDecl .
+
+    $default  reduce using rule 7 (Optional_ProcOrFuncDecls)
+
+
+State 125
+
+    8 Optional_ProcOrFuncDecls: Optional_ProcOrFuncDecls FunctionDecl .
+
+    $default  reduce using rule 8 (Optional_ProcOrFuncDecls)
+
+
+State 126
+
+  129 ConstExpression: ConstExpression . AND_SYM ConstExpression
+  130                | ConstExpression . DIV_SYM ConstExpression
+  131                | ConstExpression . EQ_SYM ConstExpression
+  132                | ConstExpression . GTE_SYM ConstExpression
+  133                | ConstExpression . GT_SYM ConstExpression
+  134                | ConstExpression . LTE_SYM ConstExpression
+  135                | ConstExpression . LT_SYM ConstExpression
+  136                | ConstExpression . MINUS_SYM ConstExpression
+  137                | ConstExpression . MOD_SYM ConstExpression
+  138                | ConstExpression . MULT_SYM ConstExpression
+  139                | ConstExpression . NEQ_SYM ConstExpression
+  140                | ConstExpression . OR_SYM ConstExpression
+  141                | ConstExpression . PLUS_SYM ConstExpression
+  142                | LPAREN_SYM ConstExpression . RPAREN_SYM
+
+    DIV_SYM     shift, and go to state 129
+    EQ_SYM      shift, and go to state 130
+    GTE_SYM     shift, and go to state 131
+    GT_SYM      shift, and go to state 132
+    LTE_SYM     shift, and go to state 133
+    LT_SYM      shift, and go to state 134
+    MINUS_SYM   shift, and go to state 135
+    MOD_SYM     shift, and go to state 136
+    MULT_SYM    shift, and go to state 137
+    PLUS_SYM    shift, and go to state 138
+    RPAREN_SYM  shift, and go to state 195
+    AND_SYM     shift, and go to state 140
+    OR_SYM      shift, and go to state 141
+    NEQ_SYM     shift, and go to state 142
+
+
+State 127
+
+  129 ConstExpression: ConstExpression . AND_SYM ConstExpression
+  130                | ConstExpression . DIV_SYM ConstExpression
+  131                | ConstExpression . EQ_SYM ConstExpression
+  132                | ConstExpression . GTE_SYM ConstExpression
+  133                | ConstExpression . GT_SYM ConstExpression
+  134                | ConstExpression . LTE_SYM ConstExpression
+  135                | ConstExpression . LT_SYM ConstExpression
+  136                | ConstExpression . MINUS_SYM ConstExpression
+  137                | ConstExpression . MOD_SYM ConstExpression
+  138                | ConstExpression . MULT_SYM ConstExpression
+  139                | ConstExpression . NEQ_SYM ConstExpression
+  140                | ConstExpression . OR_SYM ConstExpression
+  141                | ConstExpression . PLUS_SYM ConstExpression
+  144                | MINUS_SYM ConstExpression .
+
+    $default  reduce using rule 144 (ConstExpression)
+
+
+State 128
+
+  129 ConstExpression: ConstExpression . AND_SYM ConstExpression
+  130                | ConstExpression . DIV_SYM ConstExpression
+  131                | ConstExpression . EQ_SYM ConstExpression
+  132                | ConstExpression . GTE_SYM ConstExpression
+  133                | ConstExpression . GT_SYM ConstExpression
+  134                | ConstExpression . LTE_SYM ConstExpression
+  135                | ConstExpression . LT_SYM ConstExpression
+  136                | ConstExpression . MINUS_SYM ConstExpression
+  137                | ConstExpression . MOD_SYM ConstExpression
+  138                | ConstExpression . MULT_SYM ConstExpression
+  139                | ConstExpression . NEQ_SYM ConstExpression
+  140                | ConstExpression . OR_SYM ConstExpression
+  141                | ConstExpression . PLUS_SYM ConstExpression
+  143                | NOT_SYM ConstExpression .
+
+    DIV_SYM    shift, and go to state 129
+    EQ_SYM     shift, and go to state 130
+    GTE_SYM    shift, and go to state 131
+    GT_SYM     shift, and go to state 132
+    LTE_SYM    shift, and go to state 133
+    LT_SYM     shift, and go to state 134
+    MINUS_SYM  shift, and go to state 135
+    MOD_SYM    shift, and go to state 136
+    MULT_SYM   shift, and go to state 137
+    PLUS_SYM   shift, and go to state 138
+    NEQ_SYM    shift, and go to state 142
+
+    $default  reduce using rule 143 (ConstExpression)
+
+
+State 129
+
+  130 ConstExpression: ConstExpression DIV_SYM . ConstExpression
+
+    CHAR_SYM    shift, and go to state 68
+    IDENT_SYM   shift, and go to state 69
+    INT_SYM     shift, and go to state 70
+    LPAREN_SYM  shift, and go to state 71
+    MINUS_SYM   shift, and go to state 72
+    NOT_SYM     shift, and go to state 73
+    STRING_SYM  shift, and go to state 74
+
+    ConstExpression  go to state 196
+
+
+State 130
+
+  131 ConstExpression: ConstExpression EQ_SYM . ConstExpression
+
+    CHAR_SYM    shift, and go to state 68
+    IDENT_SYM   shift, and go to state 69
+    INT_SYM     shift, and go to state 70
+    LPAREN_SYM  shift, and go to state 71
+    MINUS_SYM   shift, and go to state 72
+    NOT_SYM     shift, and go to state 73
+    STRING_SYM  shift, and go to state 74
+
+    ConstExpression  go to state 197
+
+
+State 131
+
+  132 ConstExpression: ConstExpression GTE_SYM . ConstExpression
+
+    CHAR_SYM    shift, and go to state 68
+    IDENT_SYM   shift, and go to state 69
+    INT_SYM     shift, and go to state 70
+    LPAREN_SYM  shift, and go to state 71
+    MINUS_SYM   shift, and go to state 72
+    NOT_SYM     shift, and go to state 73
+    STRING_SYM  shift, and go to state 74
+
+    ConstExpression  go to state 198
+
+
+State 132
+
+  133 ConstExpression: ConstExpression GT_SYM . ConstExpression
+
+    CHAR_SYM    shift, and go to state 68
+    IDENT_SYM   shift, and go to state 69
+    INT_SYM     shift, and go to state 70
+    LPAREN_SYM  shift, and go to state 71
+    MINUS_SYM   shift, and go to state 72
+    NOT_SYM     shift, and go to state 73
+    STRING_SYM  shift, and go to state 74
+
+    ConstExpression  go to state 199
+
+
+State 133
+
+  134 ConstExpression: ConstExpression LTE_SYM . ConstExpression
+
+    CHAR_SYM    shift, and go to state 68
+    IDENT_SYM   shift, and go to state 69
+    INT_SYM     shift, and go to state 70
+    LPAREN_SYM  shift, and go to state 71
+    MINUS_SYM   shift, and go to state 72
+    NOT_SYM     shift, and go to state 73
+    STRING_SYM  shift, and go to state 74
+
+    ConstExpression  go to state 200
+
+
+State 134
+
+  135 ConstExpression: ConstExpression LT_SYM . ConstExpression
+
+    CHAR_SYM    shift, and go to state 68
+    IDENT_SYM   shift, and go to state 69
+    INT_SYM     shift, and go to state 70
+    LPAREN_SYM  shift, and go to state 71
+    MINUS_SYM   shift, and go to state 72
+    NOT_SYM     shift, and go to state 73
+    STRING_SYM  shift, and go to state 74
+
+    ConstExpression  go to state 201
+
+
+State 135
+
+  136 ConstExpression: ConstExpression MINUS_SYM . ConstExpression
+
+    CHAR_SYM    shift, and go to state 68
+    IDENT_SYM   shift, and go to state 69
+    INT_SYM     shift, and go to state 70
+    LPAREN_SYM  shift, and go to state 71
+    MINUS_SYM   shift, and go to state 72
+    NOT_SYM     shift, and go to state 73
+    STRING_SYM  shift, and go to state 74
+
+    ConstExpression  go to state 202
+
+
+State 136
+
+  137 ConstExpression: ConstExpression MOD_SYM . ConstExpression
+
+    CHAR_SYM    shift, and go to state 68
+    IDENT_SYM   shift, and go to state 69
+    INT_SYM     shift, and go to state 70
+    LPAREN_SYM  shift, and go to state 71
+    MINUS_SYM   shift, and go to state 72
+    NOT_SYM     shift, and go to state 73
+    STRING_SYM  shift, and go to state 74
+
+    ConstExpression  go to state 203
+
+
+State 137
+
+  138 ConstExpression: ConstExpression MULT_SYM . ConstExpression
+
+    CHAR_SYM    shift, and go to state 68
+    IDENT_SYM   shift, and go to state 69
+    INT_SYM     shift, and go to state 70
+    LPAREN_SYM  shift, and go to state 71
+    MINUS_SYM   shift, and go to state 72
+    NOT_SYM     shift, and go to state 73
+    STRING_SYM  shift, and go to state 74
+
+    ConstExpression  go to state 204
+
+
+State 138
+
+  141 ConstExpression: ConstExpression PLUS_SYM . ConstExpression
+
+    CHAR_SYM    shift, and go to state 68
+    IDENT_SYM   shift, and go to state 69
+    INT_SYM     shift, and go to state 70
+    LPAREN_SYM  shift, and go to state 71
+    MINUS_SYM   shift, and go to state 72
+    NOT_SYM     shift, and go to state 73
+    STRING_SYM  shift, and go to state 74
+
+    ConstExpression  go to state 205
+
+
+State 139
+
+    4 ConstDecl: CONST_SYM ConstDecls IDENT_SYM EQ_SYM ConstExpression SEMICOLON_SYM .
+    5 ConstDecls: ConstDecls IDENT_SYM EQ_SYM ConstExpression SEMICOLON_SYM .
+
+    IDENT_SYM  reduce using rule 5 (ConstDecls)
+    $default   reduce using rule 4 (ConstDecl)
+
+
+State 140
+
+  129 ConstExpression: ConstExpression AND_SYM . ConstExpression
+
+    CHAR_SYM    shift, and go to state 68
+    IDENT_SYM   shift, and go to state 69
+    INT_SYM     shift, and go to state 70
+    LPAREN_SYM  shift, and go to state 71
+    MINUS_SYM   shift, and go to state 72
+    NOT_SYM     shift, and go to state 73
+    STRING_SYM  shift, and go to state 74
+
+    ConstExpression  go to state 206
+
+
+State 141
+
+  140 ConstExpression: ConstExpression OR_SYM . ConstExpression
+
+    CHAR_SYM    shift, and go to state 68
+    IDENT_SYM   shift, and go to state 69
+    INT_SYM     shift, and go to state 70
+    LPAREN_SYM  shift, and go to state 71
+    MINUS_SYM   shift, and go to state 72
+    NOT_SYM     shift, and go to state 73
+    STRING_SYM  shift, and go to state 74
+
+    ConstExpression  go to state 207
+
+
+State 142
+
+  139 ConstExpression: ConstExpression NEQ_SYM . ConstExpression
+
+    CHAR_SYM    shift, and go to state 68
+    IDENT_SYM   shift, and go to state 69
+    INT_SYM     shift, and go to state 70
+    LPAREN_SYM  shift, and go to state 71
+    MINUS_SYM   shift, and go to state 72
+    NOT_SYM     shift, and go to state 73
+    STRING_SYM  shift, and go to state 74
+
+    ConstExpression  go to state 208
+
+
+State 143
+
+  101 Expression: Expression . AND_SYM Expression
+  102           | Expression . DIV_SYM Expression
+  103           | Expression . EQ_SYM Expression
+  104           | Expression . GTE_SYM Expression
+  105           | Expression . GT_SYM Expression
+  106           | Expression . LTE_SYM Expression
+  107           | Expression . LT_SYM Expression
+  108           | Expression . MINUS_SYM Expression
+  109           | Expression . MOD_SYM Expression
+  110           | Expression . MULT_SYM Expression
+  111           | Expression . NEQ_SYM Expression
+  112           | Expression . OR_SYM Expression
+  113           | Expression . PLUS_SYM Expression
+  124           | CHR_SYM LPAREN_SYM Expression . RPAREN_SYM
+
+    DIV_SYM     shift, and go to state 105
+    EQ_SYM      shift, and go to state 106
+    GTE_SYM     shift, and go to state 107
+    GT_SYM      shift, and go to state 108
+    LTE_SYM     shift, and go to state 109
+    LT_SYM      shift, and go to state 110
+    MINUS_SYM   shift, and go to state 111
+    MOD_SYM     shift, and go to state 112
+    MULT_SYM    shift, and go to state 113
+    PLUS_SYM    shift, and go to state 114
+    RPAREN_SYM  shift, and go to state 209
+    AND_SYM     shift, and go to state 115
+    OR_SYM      shift, and go to state 116
+    NEQ_SYM     shift, and go to state 117
+
+
+State 144
+
+   85 ForBegin: FOR_SYM IDENT_SYM ASSIGN_SYM . Expression
+
+    CHAR_SYM    shift, and go to state 20
+    CHR_SYM     shift, and go to state 21
+    IDENT_SYM   shift, and go to state 82
+    INT_SYM     shift, and go to state 25
+    LPAREN_SYM  shift, and go to state 26
+    MINUS_SYM   shift, and go to state 27
+    NOT_SYM     shift, and go to state 28
+    ORD_SYM     shift, and go to state 29
+    PRED_SYM    shift, and go to state 30
+    STRING_SYM  shift, and go to state 35
+    SUCC_SYM    shift, and go to state 36
+
+    Expression    go to state 210
+    FunctionCall  go to state 62
+    LValue        go to state 84
+
+
+State 145
+
+  148 LValues: DOT_SYM IDENT_SYM . LValues
+
+    DOT_SYM       shift, and go to state 78
+    LBRACKET_SYM  shift, and go to state 79
+
+    $default  reduce using rule 147 (LValues)
+
+    LValues  go to state 211
+
+
+State 146
+
+  101 Expression: Expression . AND_SYM Expression
+  102           | Expression . DIV_SYM Expression
+  103           | Expression . EQ_SYM Expression
+  104           | Expression . GTE_SYM Expression
+  105           | Expression . GT_SYM Expression
+  106           | Expression . LTE_SYM Expression
+  107           | Expression . LT_SYM Expression
+  108           | Expression . MINUS_SYM Expression
+  109           | Expression . MOD_SYM Expression
+  110           | Expression . MULT_SYM Expression
+  111           | Expression . NEQ_SYM Expression
+  112           | Expression . OR_SYM Expression
+  113           | Expression . PLUS_SYM Expression
+  149 LValues: LBRACKET_SYM Expression . RBRACKET_SYM LValues
+
+    DIV_SYM       shift, and go to state 105
+    EQ_SYM        shift, and go to state 106
+    GTE_SYM       shift, and go to state 107
+    GT_SYM        shift, and go to state 108
+    LTE_SYM       shift, and go to state 109
+    LT_SYM        shift, and go to state 110
+    MINUS_SYM     shift, and go to state 111
+    MOD_SYM       shift, and go to state 112
+    MULT_SYM      shift, and go to state 113
+    PLUS_SYM      shift, and go to state 114
+    RBRACKET_SYM  shift, and go to state 212
+    AND_SYM       shift, and go to state 115
+    OR_SYM        shift, and go to state 116
+    NEQ_SYM       shift, and go to state 117
+
+
+State 147
+
+   95 ProcedureCall: IDENT_SYM LPAREN_SYM Optional_Arguments . RPAREN_SYM
+  145 FunctionCall: IDENT_SYM LPAREN_SYM Optional_Arguments . RPAREN_SYM
+
+    RPAREN_SYM  shift, and go to state 213
+
+
+State 148
+
+   96 Optional_Arguments: Arguments .
+   98 Arguments: Arguments . COMMA_SYM Expression
+
+    COMMA_SYM  shift, and go to state 214
+
+    $default  reduce using rule 96 (Optional_Arguments)
+
+
+State 149
+
+   99 Arguments: Expression .
+  101 Expression: Expression . AND_SYM Expression
+  102           | Expression . DIV_SYM Expression
+  103           | Expression . EQ_SYM Expression
+  104           | Expression . GTE_SYM Expression
+  105           | Expression . GT_SYM Expression
+  106           | Expression . LTE_SYM Expression
+  107           | Expression . LT_SYM Expression
+  108           | Expression . MINUS_SYM Expression
+  109           | Expression . MOD_SYM Expression
+  110           | Expression . MULT_SYM Expression
+  111           | Expression . NEQ_SYM Expression
+  112           | Expression . OR_SYM Expression
+  113           | Expression . PLUS_SYM Expression
+
+    DIV_SYM    shift, and go to state 105
+    EQ_SYM     shift, and go to state 106
+    GTE_SYM    shift, and go to state 107
+    GT_SYM     shift, and go to state 108
+    LTE_SYM    shift, and go to state 109
+    LT_SYM     shift, and go to state 110
+    MINUS_SYM  shift, and go to state 111
+    MOD_SYM    shift, and go to state 112
+    MULT_SYM   shift, and go to state 113
+    PLUS_SYM   shift, and go to state 114
+    AND_SYM    shift, and go to state 115
+    OR_SYM     shift, and go to state 116
+    NEQ_SYM    shift, and go to state 117
+
+    $default  reduce using rule 99 (Arguments)
+
+
+State 150
+
+  145 FunctionCall: IDENT_SYM LPAREN_SYM . Optional_Arguments RPAREN_SYM
+
+    CHAR_SYM    shift, and go to state 20
+    CHR_SYM     shift, and go to state 21
+    IDENT_SYM   shift, and go to state 82
+    INT_SYM     shift, and go to state 25
+    LPAREN_SYM  shift, and go to state 26
+    MINUS_SYM   shift, and go to state 27
+    NOT_SYM     shift, and go to state 28
+    ORD_SYM     shift, and go to state 29
+    PRED_SYM    shift, and go to state 30
+    STRING_SYM  shift, and go to state 35
+    SUCC_SYM    shift, and go to state 36
+
+    $default  reduce using rule 97 (Optional_Arguments)
+
+    Optional_Arguments  go to state 215
+    Arguments           go to state 148
+    Expression          go to state 149
+    FunctionCall        go to state 62
+    LValue              go to state 84
+
+
+State 151
+
+  118 Expression: LPAREN_SYM Expression RPAREN_SYM .
+
+    $default  reduce using rule 118 (Expression)
+
+
+State 152
+
+  101 Expression: Expression . AND_SYM Expression
+  102           | Expression . DIV_SYM Expression
+  103           | Expression . EQ_SYM Expression
+  104           | Expression . GTE_SYM Expression
+  105           | Expression . GT_SYM Expression
+  106           | Expression . LTE_SYM Expression
+  107           | Expression . LT_SYM Expression
+  108           | Expression . MINUS_SYM Expression
+  109           | Expression . MOD_SYM Expression
+  110           | Expression . MULT_SYM Expression
+  111           | Expression . NEQ_SYM Expression
+  112           | Expression . OR_SYM Expression
+  113           | Expression . PLUS_SYM Expression
+  121           | ORD_SYM LPAREN_SYM Expression . RPAREN_SYM
+
+    DIV_SYM     shift, and go to state 105
+    EQ_SYM      shift, and go to state 106
+    GTE_SYM     shift, and go to state 107
+    GT_SYM      shift, and go to state 108
+    LTE_SYM     shift, and go to state 109
+    LT_SYM      shift, and go to state 110
+    MINUS_SYM   shift, and go to state 111
+    MOD_SYM     shift, and go to state 112
+    MULT_SYM    shift, and go to state 113
+    PLUS_SYM    shift, and go to state 114
+    RPAREN_SYM  shift, and go to state 216
+    AND_SYM     shift, and go to state 115
+    OR_SYM      shift, and go to state 116
+    NEQ_SYM     shift, and go to state 117
+
+
+State 153
+
+  101 Expression: Expression . AND_SYM Expression
+  102           | Expression . DIV_SYM Expression
+  103           | Expression . EQ_SYM Expression
+  104           | Expression . GTE_SYM Expression
+  105           | Expression . GT_SYM Expression
+  106           | Expression . LTE_SYM Expression
+  107           | Expression . LT_SYM Expression
+  108           | Expression . MINUS_SYM Expression
+  109           | Expression . MOD_SYM Expression
+  110           | Expression . MULT_SYM Expression
+  111           | Expression . NEQ_SYM Expression
+  112           | Expression . OR_SYM Expression
+  113           | Expression . PLUS_SYM Expression
+  122           | PRED_SYM LPAREN_SYM Expression . RPAREN_SYM
+
+    DIV_SYM     shift, and go to state 105
+    EQ_SYM      shift, and go to state 106
+    GTE_SYM     shift, and go to state 107
+    GT_SYM      shift, and go to state 108
+    LTE_SYM     shift, and go to state 109
+    LT_SYM      shift, and go to state 110
+    MINUS_SYM   shift, and go to state 111
+    MOD_SYM     shift, and go to state 112
+    MULT_SYM    shift, and go to state 113
+    PLUS_SYM    shift, and go to state 114
+    RPAREN_SYM  shift, and go to state 217
+    AND_SYM     shift, and go to state 115
+    OR_SYM      shift, and go to state 116
+    NEQ_SYM     shift, and go to state 117
+
+
+State 154
+
+   89 ReadStatement: READ_SYM LPAREN_SYM ReadArgs . LValue RPAREN_SYM
+   91 ReadArgs: ReadArgs . LValue COMMA_SYM
+
+    IDENT_SYM  shift, and go to state 218
+
+    LValue  go to state 219
+
+
+State 155
+
+  101 Expression: Expression . AND_SYM Expression
+  102           | Expression . DIV_SYM Expression
+  103           | Expression . EQ_SYM Expression
+  104           | Expression . GTE_SYM Expression
+  105           | Expression . GT_SYM Expression
+  106           | Expression . LTE_SYM Expression
+  107           | Expression . LT_SYM Expression
+  108           | Expression . MINUS_SYM Expression
+  109           | Expression . MOD_SYM Expression
+  110           | Expression . MULT_SYM Expression
+  111           | Expression . NEQ_SYM Expression
+  112           | Expression . OR_SYM Expression
+  113           | Expression . PLUS_SYM Expression
+  123           | SUCC_SYM LPAREN_SYM Expression . RPAREN_SYM
+
+    DIV_SYM     shift, and go to state 105
+    EQ_SYM      shift, and go to state 106
+    GTE_SYM     shift, and go to state 107
+    GT_SYM      shift, and go to state 108
+    LTE_SYM     shift, and go to state 109
+    LT_SYM      shift, and go to state 110
+    MINUS_SYM   shift, and go to state 111
+    MOD_SYM     shift, and go to state 112
+    MULT_SYM    shift, and go to state 113
+    PLUS_SYM    shift, and go to state 114
+    RPAREN_SYM  shift, and go to state 220
+    AND_SYM     shift, and go to state 115
+    OR_SYM      shift, and go to state 116
+    NEQ_SYM     shift, and go to state 117
+
+
+State 156
+
+   92 WriteStatement: WRITE_SYM LPAREN_SYM WriteArgs . Expression RPAREN_SYM
+   94 WriteArgs: WriteArgs . Expression COMMA_SYM
+
+    CHAR_SYM    shift, and go to state 20
+    CHR_SYM     shift, and go to state 21
+    IDENT_SYM   shift, and go to state 82
+    INT_SYM     shift, and go to state 25
+    LPAREN_SYM  shift, and go to state 26
+    MINUS_SYM   shift, and go to state 27
+    NOT_SYM     shift, and go to state 28
+    ORD_SYM     shift, and go to state 29
+    PRED_SYM    shift, and go to state 30
+    STRING_SYM  shift, and go to state 35
+    SUCC_SYM    shift, and go to state 36
+
+    Expression    go to state 221
+    FunctionCall  go to state 62
+    LValue        go to state 84
+
+
+State 157
+
+   69 ElseBegin: ELSEIF_SYM .
+
+    $default  reduce using rule 69 (ElseBegin)
+
+
+State 158
+
+   72 ElseStart: ELSE_SYM .
+
+    $default  reduce using rule 72 (ElseStart)
+
+
+State 159
+
+   67 ElseIfList: ElseIfList ElseIfHead . THEN_SYM StatementSequence
+
+    THEN_SYM  shift, and go to state 222
+
+
+State 160
+
+   68 ElseIfHead: ElseBegin . Expression
+
+    CHAR_SYM    shift, and go to state 20
+    CHR_SYM     shift, and go to state 21
+    IDENT_SYM   shift, and go to state 82
+    INT_SYM     shift, and go to state 25
+    LPAREN_SYM  shift, and go to state 26
+    MINUS_SYM   shift, and go to state 27
+    NOT_SYM     shift, and go to state 28
+    ORD_SYM     shift, and go to state 29
+    PRED_SYM    shift, and go to state 30
+    STRING_SYM  shift, and go to state 35
+    SUCC_SYM    shift, and go to state 36
+
+    Expression    go to state 223
+    FunctionCall  go to state 62
+    LValue        go to state 84
+
+
+State 161
+
+   63 IfStatement: IfHead ElseIfList ElseClause . END_SYM
+
+    END_SYM  shift, and go to state 224
+
+
+State 162
+
+   71 ElseClause: ElseStart . StatementSequence
+
+    $default  reduce using rule 48 (StatementSequences)
+
+    StatementSequence   go to state 225
+    StatementSequences  go to state 13
+
+
+State 163
+
+   64 IfHead: IfBegin THEN_SYM StatementSequence .
+
+    $default  reduce using rule 64 (IfHead)
+
+
+State 164
+
+   73 WhileStatement: WhileHead DO_SYM StatementSequence . END_SYM
+
+    END_SYM  shift, and go to state 226
+
+
+State 165
+
+   76 RepeatStatement: RepeatStatementMiddle UNTIL_SYM Expression .
+  101 Expression: Expression . AND_SYM Expression
+  102           | Expression . DIV_SYM Expression
+  103           | Expression . EQ_SYM Expression
+  104           | Expression . GTE_SYM Expression
+  105           | Expression . GT_SYM Expression
+  106           | Expression . LTE_SYM Expression
+  107           | Expression . LT_SYM Expression
+  108           | Expression . MINUS_SYM Expression
+  109           | Expression . MOD_SYM Expression
+  110           | Expression . MULT_SYM Expression
+  111           | Expression . NEQ_SYM Expression
+  112           | Expression . OR_SYM Expression
+  113           | Expression . PLUS_SYM Expression
+
+    DIV_SYM    shift, and go to state 105
+    EQ_SYM     shift, and go to state 106
+    GTE_SYM    shift, and go to state 107
+    GT_SYM     shift, and go to state 108
+    LTE_SYM    shift, and go to state 109
+    LT_SYM     shift, and go to state 110
+    MINUS_SYM  shift, and go to state 111
+    MOD_SYM    shift, and go to state 112
+    MULT_SYM   shift, and go to state 113
+    PLUS_SYM   shift, and go to state 114
+    AND_SYM    shift, and go to state 115
+    OR_SYM     shift, and go to state 116
+    NEQ_SYM    shift, and go to state 117
+
+    $default  reduce using rule 76 (RepeatStatement)
+
+
+State 166
+
+   81 ForInc: ForIncGuts DO_SYM StatementSequence . END_SYM
+
+    END_SYM  shift, and go to state 227
+
+
+State 167
+
+   83 ForDec: ForDecGuts DO_SYM StatementSequence . END_SYM
+
+    END_SYM  shift, and go to state 228
+
+
+State 168
+
+   84 ForDecGuts: ForBegin DOWNTO_SYM Expression .
+  101 Expression: Expression . AND_SYM Expression
+  102           | Expression . DIV_SYM Expression
+  103           | Expression . EQ_SYM Expression
+  104           | Expression . GTE_SYM Expression
+  105           | Expression . GT_SYM Expression
+  106           | Expression . LTE_SYM Expression
+  107           | Expression . LT_SYM Expression
+  108           | Expression . MINUS_SYM Expression
+  109           | Expression . MOD_SYM Expression
+  110           | Expression . MULT_SYM Expression
+  111           | Expression . NEQ_SYM Expression
+  112           | Expression . OR_SYM Expression
+  113           | Expression . PLUS_SYM Expression
+
+    DIV_SYM    shift, and go to state 105
+    EQ_SYM     shift, and go to state 106
+    GTE_SYM    shift, and go to state 107
+    GT_SYM     shift, and go to state 108
+    LTE_SYM    shift, and go to state 109
+    LT_SYM     shift, and go to state 110
+    MINUS_SYM  shift, and go to state 111
+    MOD_SYM    shift, and go to state 112
+    MULT_SYM   shift, and go to state 113
+    PLUS_SYM   shift, and go to state 114
+    AND_SYM    shift, and go to state 115
+    OR_SYM     shift, and go to state 116
+    NEQ_SYM    shift, and go to state 117
+
+    $default  reduce using rule 84 (ForDecGuts)
+
+
+State 169
+
+   82 ForIncGuts: ForBegin TO_SYM Expression .
+  101 Expression: Expression . AND_SYM Expression
+  102           | Expression . DIV_SYM Expression
+  103           | Expression . EQ_SYM Expression
+  104           | Expression . GTE_SYM Expression
+  105           | Expression . GT_SYM Expression
+  106           | Expression . LTE_SYM Expression
+  107           | Expression . LT_SYM Expression
+  108           | Expression . MINUS_SYM Expression
+  109           | Expression . MOD_SYM Expression
+  110           | Expression . MULT_SYM Expression
+  111           | Expression . NEQ_SYM Expression
+  112           | Expression . OR_SYM Expression
+  113           | Expression . PLUS_SYM Expression
+
+    DIV_SYM    shift, and go to state 105
+    EQ_SYM     shift, and go to state 106
+    GTE_SYM    shift, and go to state 107
+    GT_SYM     shift, and go to state 108
+    LTE_SYM    shift, and go to state 109
+    LT_SYM     shift, and go to state 110
+    MINUS_SYM  shift, and go to state 111
+    MOD_SYM    shift, and go to state 112
+    MULT_SYM   shift, and go to state 113
+    PLUS_SYM   shift, and go to state 114
+    AND_SYM    shift, and go to state 115
+    OR_SYM     shift, and go to state 116
+    NEQ_SYM    shift, and go to state 117
+
+    $default  reduce using rule 82 (ForIncGuts)
+
+
+State 170
+
+  101 Expression: Expression . AND_SYM Expression
+  102           | Expression . DIV_SYM Expression
+  102           | Expression DIV_SYM Expression .
+  103           | Expression . EQ_SYM Expression
+  104           | Expression . GTE_SYM Expression
+  105           | Expression . GT_SYM Expression
+  106           | Expression . LTE_SYM Expression
+  107           | Expression . LT_SYM Expression
+  108           | Expression . MINUS_SYM Expression
+  109           | Expression . MOD_SYM Expression
+  110           | Expression . MULT_SYM Expression
+  111           | Expression . NEQ_SYM Expression
+  112           | Expression . OR_SYM Expression
+  113           | Expression . PLUS_SYM Expression
+
+    EQ_SYM   shift, and go to state 106
+    GTE_SYM  shift, and go to state 107
+    GT_SYM   shift, and go to state 108
+    LTE_SYM  shift, and go to state 109
+    LT_SYM   shift, and go to state 110
+    NEQ_SYM  shift, and go to state 117
+
+    $default  reduce using rule 102 (Expression)
+
+
+State 171
+
+  101 Expression: Expression . AND_SYM Expression
+  102           | Expression . DIV_SYM Expression
+  103           | Expression . EQ_SYM Expression
+  103           | Expression EQ_SYM Expression .
+  104           | Expression . GTE_SYM Expression
+  105           | Expression . GT_SYM Expression
+  106           | Expression . LTE_SYM Expression
+  107           | Expression . LT_SYM Expression
+  108           | Expression . MINUS_SYM Expression
+  109           | Expression . MOD_SYM Expression
+  110           | Expression . MULT_SYM Expression
+  111           | Expression . NEQ_SYM Expression
+  112           | Expression . OR_SYM Expression
+  113           | Expression . PLUS_SYM Expression
+
+    EQ_SYM   error (nonassociative)
+    GTE_SYM  error (nonassociative)
+    GT_SYM   error (nonassociative)
+    LTE_SYM  error (nonassociative)
+    LT_SYM   error (nonassociative)
+    NEQ_SYM  error (nonassociative)
+
+    $default  reduce using rule 103 (Expression)
+
+
+State 172
+
+  101 Expression: Expression . AND_SYM Expression
+  102           | Expression . DIV_SYM Expression
+  103           | Expression . EQ_SYM Expression
+  104           | Expression . GTE_SYM Expression
+  104           | Expression GTE_SYM Expression .
+  105           | Expression . GT_SYM Expression
+  106           | Expression . LTE_SYM Expression
+  107           | Expression . LT_SYM Expression
+  108           | Expression . MINUS_SYM Expression
+  109           | Expression . MOD_SYM Expression
+  110           | Expression . MULT_SYM Expression
+  111           | Expression . NEQ_SYM Expression
+  112           | Expression . OR_SYM Expression
+  113           | Expression . PLUS_SYM Expression
+
+    EQ_SYM   error (nonassociative)
+    GTE_SYM  error (nonassociative)
+    GT_SYM   error (nonassociative)
+    LTE_SYM  error (nonassociative)
+    LT_SYM   error (nonassociative)
+    NEQ_SYM  error (nonassociative)
+
+    $default  reduce using rule 104 (Expression)
+
+
+State 173
+
+  101 Expression: Expression . AND_SYM Expression
+  102           | Expression . DIV_SYM Expression
+  103           | Expression . EQ_SYM Expression
+  104           | Expression . GTE_SYM Expression
+  105           | Expression . GT_SYM Expression
+  105           | Expression GT_SYM Expression .
+  106           | Expression . LTE_SYM Expression
+  107           | Expression . LT_SYM Expression
+  108           | Expression . MINUS_SYM Expression
+  109           | Expression . MOD_SYM Expression
+  110           | Expression . MULT_SYM Expression
+  111           | Expression . NEQ_SYM Expression
+  112           | Expression . OR_SYM Expression
+  113           | Expression . PLUS_SYM Expression
+
+    EQ_SYM   error (nonassociative)
+    GTE_SYM  error (nonassociative)
+    GT_SYM   error (nonassociative)
+    LTE_SYM  error (nonassociative)
+    LT_SYM   error (nonassociative)
+    NEQ_SYM  error (nonassociative)
+
+    $default  reduce using rule 105 (Expression)
+
+
+State 174
+
+  101 Expression: Expression . AND_SYM Expression
+  102           | Expression . DIV_SYM Expression
+  103           | Expression . EQ_SYM Expression
+  104           | Expression . GTE_SYM Expression
+  105           | Expression . GT_SYM Expression
+  106           | Expression . LTE_SYM Expression
+  106           | Expression LTE_SYM Expression .
+  107           | Expression . LT_SYM Expression
+  108           | Expression . MINUS_SYM Expression
+  109           | Expression . MOD_SYM Expression
+  110           | Expression . MULT_SYM Expression
+  111           | Expression . NEQ_SYM Expression
+  112           | Expression . OR_SYM Expression
+  113           | Expression . PLUS_SYM Expression
+
+    EQ_SYM   error (nonassociative)
+    GTE_SYM  error (nonassociative)
+    GT_SYM   error (nonassociative)
+    LTE_SYM  error (nonassociative)
+    LT_SYM   error (nonassociative)
+    NEQ_SYM  error (nonassociative)
+
+    $default  reduce using rule 106 (Expression)
+
+
+State 175
+
+  101 Expression: Expression . AND_SYM Expression
+  102           | Expression . DIV_SYM Expression
+  103           | Expression . EQ_SYM Expression
+  104           | Expression . GTE_SYM Expression
+  105           | Expression . GT_SYM Expression
+  106           | Expression . LTE_SYM Expression
+  107           | Expression . LT_SYM Expression
+  107           | Expression LT_SYM Expression .
+  108           | Expression . MINUS_SYM Expression
+  109           | Expression . MOD_SYM Expression
+  110           | Expression . MULT_SYM Expression
+  111           | Expression . NEQ_SYM Expression
+  112           | Expression . OR_SYM Expression
+  113           | Expression . PLUS_SYM Expression
+
+    EQ_SYM   error (nonassociative)
+    GTE_SYM  error (nonassociative)
+    GT_SYM   error (nonassociative)
+    LTE_SYM  error (nonassociative)
+    LT_SYM   error (nonassociative)
+    NEQ_SYM  error (nonassociative)
+
+    $default  reduce using rule 107 (Expression)
+
+
+State 176
+
+  101 Expression: Expression . AND_SYM Expression
+  102           | Expression . DIV_SYM Expression
+  103           | Expression . EQ_SYM Expression
+  104           | Expression . GTE_SYM Expression
+  105           | Expression . GT_SYM Expression
+  106           | Expression . LTE_SYM Expression
+  107           | Expression . LT_SYM Expression
+  108           | Expression . MINUS_SYM Expression
+  108           | Expression MINUS_SYM Expression .
+  109           | Expression . MOD_SYM Expression
+  110           | Expression . MULT_SYM Expression
+  111           | Expression . NEQ_SYM Expression
+  112           | Expression . OR_SYM Expression
+  113           | Expression . PLUS_SYM Expression
+
+    DIV_SYM   shift, and go to state 105
+    EQ_SYM    shift, and go to state 106
+    GTE_SYM   shift, and go to state 107
+    GT_SYM    shift, and go to state 108
+    LTE_SYM   shift, and go to state 109
+    LT_SYM    shift, and go to state 110
+    MOD_SYM   shift, and go to state 112
+    MULT_SYM  shift, and go to state 113
+    NEQ_SYM   shift, and go to state 117
+
+    $default  reduce using rule 108 (Expression)
+
+
+State 177
+
+  101 Expression: Expression . AND_SYM Expression
+  102           | Expression . DIV_SYM Expression
+  103           | Expression . EQ_SYM Expression
+  104           | Expression . GTE_SYM Expression
+  105           | Expression . GT_SYM Expression
+  106           | Expression . LTE_SYM Expression
+  107           | Expression . LT_SYM Expression
+  108           | Expression . MINUS_SYM Expression
+  109           | Expression . MOD_SYM Expression
+  109           | Expression MOD_SYM Expression .
+  110           | Expression . MULT_SYM Expression
+  111           | Expression . NEQ_SYM Expression
+  112           | Expression . OR_SYM Expression
+  113           | Expression . PLUS_SYM Expression
+
+    EQ_SYM   shift, and go to state 106
+    GTE_SYM  shift, and go to state 107
+    GT_SYM   shift, and go to state 108
+    LTE_SYM  shift, and go to state 109
+    LT_SYM   shift, and go to state 110
+    NEQ_SYM  shift, and go to state 117
+
+    $default  reduce using rule 109 (Expression)
+
+
+State 178
+
+  101 Expression: Expression . AND_SYM Expression
+  102           | Expression . DIV_SYM Expression
+  103           | Expression . EQ_SYM Expression
+  104           | Expression . GTE_SYM Expression
+  105           | Expression . GT_SYM Expression
+  106           | Expression . LTE_SYM Expression
+  107           | Expression . LT_SYM Expression
+  108           | Expression . MINUS_SYM Expression
+  109           | Expression . MOD_SYM Expression
+  110           | Expression . MULT_SYM Expression
+  110           | Expression MULT_SYM Expression .
+  111           | Expression . NEQ_SYM Expression
+  112           | Expression . OR_SYM Expression
+  113           | Expression . PLUS_SYM Expression
+
+    EQ_SYM   shift, and go to state 106
+    GTE_SYM  shift, and go to state 107
+    GT_SYM   shift, and go to state 108
+    LTE_SYM  shift, and go to state 109
+    LT_SYM   shift, and go to state 110
+    NEQ_SYM  shift, and go to state 117
+
+    $default  reduce using rule 110 (Expression)
+
+
+State 179
+
+  101 Expression: Expression . AND_SYM Expression
+  102           | Expression . DIV_SYM Expression
+  103           | Expression . EQ_SYM Expression
+  104           | Expression . GTE_SYM Expression
+  105           | Expression . GT_SYM Expression
+  106           | Expression . LTE_SYM Expression
+  107           | Expression . LT_SYM Expression
+  108           | Expression . MINUS_SYM Expression
+  109           | Expression . MOD_SYM Expression
+  110           | Expression . MULT_SYM Expression
+  111           | Expression . NEQ_SYM Expression
+  112           | Expression . OR_SYM Expression
+  113           | Expression . PLUS_SYM Expression
+  113           | Expression PLUS_SYM Expression .
+
+    DIV_SYM   shift, and go to state 105
+    EQ_SYM    shift, and go to state 106
+    GTE_SYM   shift, and go to state 107
+    GT_SYM    shift, and go to state 108
+    LTE_SYM   shift, and go to state 109
+    LT_SYM    shift, and go to state 110
+    MOD_SYM   shift, and go to state 112
+    MULT_SYM  shift, and go to state 113
+    NEQ_SYM   shift, and go to state 117
+
+    $default  reduce using rule 113 (Expression)
+
+
+State 180
+
+  101 Expression: Expression . AND_SYM Expression
+  101           | Expression AND_SYM Expression .
+  102           | Expression . DIV_SYM Expression
+  103           | Expression . EQ_SYM Expression
+  104           | Expression . GTE_SYM Expression
+  105           | Expression . GT_SYM Expression
+  106           | Expression . LTE_SYM Expression
+  107           | Expression . LT_SYM Expression
+  108           | Expression . MINUS_SYM Expression
+  109           | Expression . MOD_SYM Expression
+  110           | Expression . MULT_SYM Expression
+  111           | Expression . NEQ_SYM Expression
+  112           | Expression . OR_SYM Expression
+  113           | Expression . PLUS_SYM Expression
+
+    DIV_SYM    shift, and go to state 105
+    EQ_SYM     shift, and go to state 106
+    GTE_SYM    shift, and go to state 107
+    GT_SYM     shift, and go to state 108
+    LTE_SYM    shift, and go to state 109
+    LT_SYM     shift, and go to state 110
+    MINUS_SYM  shift, and go to state 111
+    MOD_SYM    shift, and go to state 112
+    MULT_SYM   shift, and go to state 113
+    PLUS_SYM   shift, and go to state 114
+    NEQ_SYM    shift, and go to state 117
+
+    $default  reduce using rule 101 (Expression)
+
+
+State 181
+
+  101 Expression: Expression . AND_SYM Expression
+  102           | Expression . DIV_SYM Expression
+  103           | Expression . EQ_SYM Expression
+  104           | Expression . GTE_SYM Expression
+  105           | Expression . GT_SYM Expression
+  106           | Expression . LTE_SYM Expression
+  107           | Expression . LT_SYM Expression
+  108           | Expression . MINUS_SYM Expression
+  109           | Expression . MOD_SYM Expression
+  110           | Expression . MULT_SYM Expression
+  111           | Expression . NEQ_SYM Expression
+  112           | Expression . OR_SYM Expression
+  112           | Expression OR_SYM Expression .
+  113           | Expression . PLUS_SYM Expression
+
+    DIV_SYM    shift, and go to state 105
+    EQ_SYM     shift, and go to state 106
+    GTE_SYM    shift, and go to state 107
+    GT_SYM     shift, and go to state 108
+    LTE_SYM    shift, and go to state 109
+    LT_SYM     shift, and go to state 110
+    MINUS_SYM  shift, and go to state 111
+    MOD_SYM    shift, and go to state 112
+    MULT_SYM   shift, and go to state 113
+    PLUS_SYM   shift, and go to state 114
+    NEQ_SYM    shift, and go to state 117
+
+    $default  reduce using rule 112 (Expression)
+
+
+State 182
+
+  101 Expression: Expression . AND_SYM Expression
+  102           | Expression . DIV_SYM Expression
+  103           | Expression . EQ_SYM Expression
+  104           | Expression . GTE_SYM Expression
+  105           | Expression . GT_SYM Expression
+  106           | Expression . LTE_SYM Expression
+  107           | Expression . LT_SYM Expression
+  108           | Expression . MINUS_SYM Expression
+  109           | Expression . MOD_SYM Expression
+  110           | Expression . MULT_SYM Expression
+  111           | Expression . NEQ_SYM Expression
+  111           | Expression NEQ_SYM Expression .
+  112           | Expression . OR_SYM Expression
+  113           | Expression . PLUS_SYM Expression
+
+    EQ_SYM   error (nonassociative)
+    GTE_SYM  error (nonassociative)
+    GT_SYM   error (nonassociative)
+    LTE_SYM  error (nonassociative)
+    LT_SYM   error (nonassociative)
+    NEQ_SYM  error (nonassociative)
+
+    $default  reduce using rule 111 (Expression)
+
+
+State 183
+
+   62 Assignment: LValue ASSIGN_SYM Expression .
+  101 Expression: Expression . AND_SYM Expression
+  102           | Expression . DIV_SYM Expression
+  103           | Expression . EQ_SYM Expression
+  104           | Expression . GTE_SYM Expression
+  105           | Expression . GT_SYM Expression
+  106           | Expression . LTE_SYM Expression
+  107           | Expression . LT_SYM Expression
+  108           | Expression . MINUS_SYM Expression
+  109           | Expression . MOD_SYM Expression
+  110           | Expression . MULT_SYM Expression
+  111           | Expression . NEQ_SYM Expression
+  112           | Expression . OR_SYM Expression
+  113           | Expression . PLUS_SYM Expression
+
+    DIV_SYM    shift, and go to state 105
+    EQ_SYM     shift, and go to state 106
+    GTE_SYM    shift, and go to state 107
+    GT_SYM     shift, and go to state 108
+    LTE_SYM    shift, and go to state 109
+    LT_SYM     shift, and go to state 110
+    MINUS_SYM  shift, and go to state 111
+    MOD_SYM    shift, and go to state 112
+    MULT_SYM   shift, and go to state 113
+    PLUS_SYM   shift, and go to state 114
+    AND_SYM    shift, and go to state 115
+    OR_SYM     shift, and go to state 116
+    NEQ_SYM    shift, and go to state 117
+
+    $default  reduce using rule 62 (Assignment)
+
+
+State 184
+
+   39 ArrayType: ARRAY_SYM . LBRACKET_SYM ConstExpression COLON_SYM ConstExpression RBRACKET_SYM OF_SYM Type
+
+    LBRACKET_SYM  shift, and go to state 229
+
+
+State 185
+
+   35 SimpleType: IDENT_SYM .
+
+    $default  reduce using rule 35 (SimpleType)
+
+
+State 186
+
+   36 RecordType: RECORD_SYM . RecordTypeDecls END_SYM
+
+    $default  reduce using rule 37 (RecordTypeDecls)
+
+    RecordTypeDecls  go to state 230
+
+
+State 187
+
+   29 TypeDecl: TYPE_SYM TypeDecls IDENT_SYM EQ_SYM Type . SEMICOLON_SYM
+   31 TypeDecls: TypeDecls IDENT_SYM EQ_SYM Type . SEMICOLON_SYM
+
+    SEMICOLON_SYM  shift, and go to state 231
+
+
+State 188
+
+   32 Type: SimpleType .
+
+    $default  reduce using rule 32 (Type)
+
+
+State 189
+
+   33 Type: RecordType .
+
+    $default  reduce using rule 33 (Type)
+
+
+State 190
+
+   34 Type: ArrayType .
+
+    $default  reduce using rule 34 (Type)
+
+
+State 191
+
+   44 VarDecl: VAR_SYM VarDecls IdentList COLON_SYM . Type SEMICOLON_SYM
+   46 VarDecls: VarDecls IdentList COLON_SYM . Type SEMICOLON_SYM
+
+    ARRAY_SYM   shift, and go to state 184
+    IDENT_SYM   shift, and go to state 185
+    RECORD_SYM  shift, and go to state 186
+
+    Type        go to state 232
+    SimpleType  go to state 188
+    RecordType  go to state 189
+    ArrayType   go to state 190
+
+
+State 192
+
+   40 IdentList: IdentLists IDENT_SYM .
+   42 IdentLists: IdentLists IDENT_SYM . COMMA_SYM
+
+    COMMA_SYM  shift, and go to state 233
+
+    $default  reduce using rule 40 (IdentList)
+
+
+State 193
+
+   12 FunctionDecl: FUNCTION_SYM IDENT_SYM . LPAREN_SYM Optional_FormalParameters RPAREN_SYM COLON_SYM Type SEMICOLON_SYM FORWARD_SYM SEMICOLON_SYM
+   13             | FUNCTION_SYM IDENT_SYM . LPAREN_SYM Optional_FormalParameters RPAREN_SYM COLON_SYM Type SEMICOLON_SYM Body SEMICOLON_SYM
+
+    LPAREN_SYM  shift, and go to state 234
+
+
+State 194
+
+   10 ProcedureDecl: PROCEDURE_SYM IDENT_SYM . LPAREN_SYM Optional_FormalParameters RPAREN_SYM SEMICOLON_SYM FORWARD_SYM SEMICOLON_SYM
+   11              | PROCEDURE_SYM IDENT_SYM . LPAREN_SYM Optional_FormalParameters RPAREN_SYM SEMICOLON_SYM Body SEMICOLON_SYM
+
+    LPAREN_SYM  shift, and go to state 235
+
+
+State 195
+
+  142 ConstExpression: LPAREN_SYM ConstExpression RPAREN_SYM .
+
+    $default  reduce using rule 142 (ConstExpression)
+
+
+State 196
+
+  129 ConstExpression: ConstExpression . AND_SYM ConstExpression
+  130                | ConstExpression . DIV_SYM ConstExpression
+  130                | ConstExpression DIV_SYM ConstExpression .
+  131                | ConstExpression . EQ_SYM ConstExpression
+  132                | ConstExpression . GTE_SYM ConstExpression
+  133                | ConstExpression . GT_SYM ConstExpression
+  134                | ConstExpression . LTE_SYM ConstExpression
+  135                | ConstExpression . LT_SYM ConstExpression
+  136                | ConstExpression . MINUS_SYM ConstExpression
+  137                | ConstExpression . MOD_SYM ConstExpression
+  138                | ConstExpression . MULT_SYM ConstExpression
+  139                | ConstExpression . NEQ_SYM ConstExpression
+  140                | ConstExpression . OR_SYM ConstExpression
+  141                | ConstExpression . PLUS_SYM ConstExpression
+
+    EQ_SYM   shift, and go to state 130
+    GTE_SYM  shift, and go to state 131
+    GT_SYM   shift, and go to state 132
+    LTE_SYM  shift, and go to state 133
+    LT_SYM   shift, and go to state 134
+    NEQ_SYM  shift, and go to state 142
+
+    $default  reduce using rule 130 (ConstExpression)
+
+
+State 197
+
+  129 ConstExpression: ConstExpression . AND_SYM ConstExpression
+  130                | ConstExpression . DIV_SYM ConstExpression
+  131                | ConstExpression . EQ_SYM ConstExpression
+  131                | ConstExpression EQ_SYM ConstExpression .
+  132                | ConstExpression . GTE_SYM ConstExpression
+  133                | ConstExpression . GT_SYM ConstExpression
+  134                | ConstExpression . LTE_SYM ConstExpression
+  135                | ConstExpression . LT_SYM ConstExpression
+  136                | ConstExpression . MINUS_SYM ConstExpression
+  137                | ConstExpression . MOD_SYM ConstExpression
+  138                | ConstExpression . MULT_SYM ConstExpression
+  139                | ConstExpression . NEQ_SYM ConstExpression
+  140                | ConstExpression . OR_SYM ConstExpression
+  141                | ConstExpression . PLUS_SYM ConstExpression
+
+    EQ_SYM   error (nonassociative)
+    GTE_SYM  error (nonassociative)
+    GT_SYM   error (nonassociative)
+    LTE_SYM  error (nonassociative)
+    LT_SYM   error (nonassociative)
+    NEQ_SYM  error (nonassociative)
+
+    $default  reduce using rule 131 (ConstExpression)
+
+
+State 198
+
+  129 ConstExpression: ConstExpression . AND_SYM ConstExpression
+  130                | ConstExpression . DIV_SYM ConstExpression
+  131                | ConstExpression . EQ_SYM ConstExpression
+  132                | ConstExpression . GTE_SYM ConstExpression
+  132                | ConstExpression GTE_SYM ConstExpression .
+  133                | ConstExpression . GT_SYM ConstExpression
+  134                | ConstExpression . LTE_SYM ConstExpression
+  135                | ConstExpression . LT_SYM ConstExpression
+  136                | ConstExpression . MINUS_SYM ConstExpression
+  137                | ConstExpression . MOD_SYM ConstExpression
+  138                | ConstExpression . MULT_SYM ConstExpression
+  139                | ConstExpression . NEQ_SYM ConstExpression
+  140                | ConstExpression . OR_SYM ConstExpression
+  141                | ConstExpression . PLUS_SYM ConstExpression
+
+    EQ_SYM   error (nonassociative)
+    GTE_SYM  error (nonassociative)
+    GT_SYM   error (nonassociative)
+    LTE_SYM  error (nonassociative)
+    LT_SYM   error (nonassociative)
+    NEQ_SYM  error (nonassociative)
+
+    $default  reduce using rule 132 (ConstExpression)
+
+
+State 199
+
+  129 ConstExpression: ConstExpression . AND_SYM ConstExpression
+  130                | ConstExpression . DIV_SYM ConstExpression
+  131                | ConstExpression . EQ_SYM ConstExpression
+  132                | ConstExpression . GTE_SYM ConstExpression
+  133                | ConstExpression . GT_SYM ConstExpression
+  133                | ConstExpression GT_SYM ConstExpression .
+  134                | ConstExpression . LTE_SYM ConstExpression
+  135                | ConstExpression . LT_SYM ConstExpression
+  136                | ConstExpression . MINUS_SYM ConstExpression
+  137                | ConstExpression . MOD_SYM ConstExpression
+  138                | ConstExpression . MULT_SYM ConstExpression
+  139                | ConstExpression . NEQ_SYM ConstExpression
+  140                | ConstExpression . OR_SYM ConstExpression
+  141                | ConstExpression . PLUS_SYM ConstExpression
+
+    EQ_SYM   error (nonassociative)
+    GTE_SYM  error (nonassociative)
+    GT_SYM   error (nonassociative)
+    LTE_SYM  error (nonassociative)
+    LT_SYM   error (nonassociative)
+    NEQ_SYM  error (nonassociative)
+
+    $default  reduce using rule 133 (ConstExpression)
+
+
+State 200
+
+  129 ConstExpression: ConstExpression . AND_SYM ConstExpression
+  130                | ConstExpression . DIV_SYM ConstExpression
+  131                | ConstExpression . EQ_SYM ConstExpression
+  132                | ConstExpression . GTE_SYM ConstExpression
+  133                | ConstExpression . GT_SYM ConstExpression
+  134                | ConstExpression . LTE_SYM ConstExpression
+  134                | ConstExpression LTE_SYM ConstExpression .
+  135                | ConstExpression . LT_SYM ConstExpression
+  136                | ConstExpression . MINUS_SYM ConstExpression
+  137                | ConstExpression . MOD_SYM ConstExpression
+  138                | ConstExpression . MULT_SYM ConstExpression
+  139                | ConstExpression . NEQ_SYM ConstExpression
+  140                | ConstExpression . OR_SYM ConstExpression
+  141                | ConstExpression . PLUS_SYM ConstExpression
+
+    EQ_SYM   error (nonassociative)
+    GTE_SYM  error (nonassociative)
+    GT_SYM   error (nonassociative)
+    LTE_SYM  error (nonassociative)
+    LT_SYM   error (nonassociative)
+    NEQ_SYM  error (nonassociative)
+
+    $default  reduce using rule 134 (ConstExpression)
+
+
+State 201
+
+  129 ConstExpression: ConstExpression . AND_SYM ConstExpression
+  130                | ConstExpression . DIV_SYM ConstExpression
+  131                | ConstExpression . EQ_SYM ConstExpression
+  132                | ConstExpression . GTE_SYM ConstExpression
+  133                | ConstExpression . GT_SYM ConstExpression
+  134                | ConstExpression . LTE_SYM ConstExpression
+  135                | ConstExpression . LT_SYM ConstExpression
+  135                | ConstExpression LT_SYM ConstExpression .
+  136                | ConstExpression . MINUS_SYM ConstExpression
+  137                | ConstExpression . MOD_SYM ConstExpression
+  138                | ConstExpression . MULT_SYM ConstExpression
+  139                | ConstExpression . NEQ_SYM ConstExpression
+  140                | ConstExpression . OR_SYM ConstExpression
+  141                | ConstExpression . PLUS_SYM ConstExpression
+
+    EQ_SYM   error (nonassociative)
+    GTE_SYM  error (nonassociative)
+    GT_SYM   error (nonassociative)
+    LTE_SYM  error (nonassociative)
+    LT_SYM   error (nonassociative)
+    NEQ_SYM  error (nonassociative)
+
+    $default  reduce using rule 135 (ConstExpression)
+
+
+State 202
+
+  129 ConstExpression: ConstExpression . AND_SYM ConstExpression
+  130                | ConstExpression . DIV_SYM ConstExpression
+  131                | ConstExpression . EQ_SYM ConstExpression
+  132                | ConstExpression . GTE_SYM ConstExpression
+  133                | ConstExpression . GT_SYM ConstExpression
+  134                | ConstExpression . LTE_SYM ConstExpression
+  135                | ConstExpression . LT_SYM ConstExpression
+  136                | ConstExpression . MINUS_SYM ConstExpression
+  136                | ConstExpression MINUS_SYM ConstExpression .
+  137                | ConstExpression . MOD_SYM ConstExpression
+  138                | ConstExpression . MULT_SYM ConstExpression
+  139                | ConstExpression . NEQ_SYM ConstExpression
+  140                | ConstExpression . OR_SYM ConstExpression
+  141                | ConstExpression . PLUS_SYM ConstExpression
+
+    DIV_SYM   shift, and go to state 129
+    EQ_SYM    shift, and go to state 130
+    GTE_SYM   shift, and go to state 131
+    GT_SYM    shift, and go to state 132
+    LTE_SYM   shift, and go to state 133
+    LT_SYM    shift, and go to state 134
+    MOD_SYM   shift, and go to state 136
+    MULT_SYM  shift, and go to state 137
+    NEQ_SYM   shift, and go to state 142
+
+    $default  reduce using rule 136 (ConstExpression)
+
+
+State 203
+
+  129 ConstExpression: ConstExpression . AND_SYM ConstExpression
+  130                | ConstExpression . DIV_SYM ConstExpression
+  131                | ConstExpression . EQ_SYM ConstExpression
+  132                | ConstExpression . GTE_SYM ConstExpression
+  133                | ConstExpression . GT_SYM ConstExpression
+  134                | ConstExpression . LTE_SYM ConstExpression
+  135                | ConstExpression . LT_SYM ConstExpression
+  136                | ConstExpression . MINUS_SYM ConstExpression
+  137                | ConstExpression . MOD_SYM ConstExpression
+  137                | ConstExpression MOD_SYM ConstExpression .
+  138                | ConstExpression . MULT_SYM ConstExpression
+  139                | ConstExpression . NEQ_SYM ConstExpression
+  140                | ConstExpression . OR_SYM ConstExpression
+  141                | ConstExpression . PLUS_SYM ConstExpression
+
+    EQ_SYM   shift, and go to state 130
+    GTE_SYM  shift, and go to state 131
+    GT_SYM   shift, and go to state 132
+    LTE_SYM  shift, and go to state 133
+    LT_SYM   shift, and go to state 134
+    NEQ_SYM  shift, and go to state 142
+
+    $default  reduce using rule 137 (ConstExpression)
+
+
+State 204
+
+  129 ConstExpression: ConstExpression . AND_SYM ConstExpression
+  130                | ConstExpression . DIV_SYM ConstExpression
+  131                | ConstExpression . EQ_SYM ConstExpression
+  132                | ConstExpression . GTE_SYM ConstExpression
+  133                | ConstExpression . GT_SYM ConstExpression
+  134                | ConstExpression . LTE_SYM ConstExpression
+  135                | ConstExpression . LT_SYM ConstExpression
+  136                | ConstExpression . MINUS_SYM ConstExpression
+  137                | ConstExpression . MOD_SYM ConstExpression
+  138                | ConstExpression . MULT_SYM ConstExpression
+  138                | ConstExpression MULT_SYM ConstExpression .
+  139                | ConstExpression . NEQ_SYM ConstExpression
+  140                | ConstExpression . OR_SYM ConstExpression
+  141                | ConstExpression . PLUS_SYM ConstExpression
+
+    EQ_SYM   shift, and go to state 130
+    GTE_SYM  shift, and go to state 131
+    GT_SYM   shift, and go to state 132
+    LTE_SYM  shift, and go to state 133
+    LT_SYM   shift, and go to state 134
+    NEQ_SYM  shift, and go to state 142
+
+    $default  reduce using rule 138 (ConstExpression)
+
+
+State 205
+
+  129 ConstExpression: ConstExpression . AND_SYM ConstExpression
+  130                | ConstExpression . DIV_SYM ConstExpression
+  131                | ConstExpression . EQ_SYM ConstExpression
+  132                | ConstExpression . GTE_SYM ConstExpression
+  133                | ConstExpression . GT_SYM ConstExpression
+  134                | ConstExpression . LTE_SYM ConstExpression
+  135                | ConstExpression . LT_SYM ConstExpression
+  136                | ConstExpression . MINUS_SYM ConstExpression
+  137                | ConstExpression . MOD_SYM ConstExpression
+  138                | ConstExpression . MULT_SYM ConstExpression
+  139                | ConstExpression . NEQ_SYM ConstExpression
+  140                | ConstExpression . OR_SYM ConstExpression
+  141                | ConstExpression . PLUS_SYM ConstExpression
+  141                | ConstExpression PLUS_SYM ConstExpression .
+
+    DIV_SYM   shift, and go to state 129
+    EQ_SYM    shift, and go to state 130
+    GTE_SYM   shift, and go to state 131
+    GT_SYM    shift, and go to state 132
+    LTE_SYM   shift, and go to state 133
+    LT_SYM    shift, and go to state 134
+    MOD_SYM   shift, and go to state 136
+    MULT_SYM  shift, and go to state 137
+    NEQ_SYM   shift, and go to state 142
+
+    $default  reduce using rule 141 (ConstExpression)
+
+
+State 206
+
+  129 ConstExpression: ConstExpression . AND_SYM ConstExpression
+  129                | ConstExpression AND_SYM ConstExpression .
+  130                | ConstExpression . DIV_SYM ConstExpression
+  131                | ConstExpression . EQ_SYM ConstExpression
+  132                | ConstExpression . GTE_SYM ConstExpression
+  133                | ConstExpression . GT_SYM ConstExpression
+  134                | ConstExpression . LTE_SYM ConstExpression
+  135                | ConstExpression . LT_SYM ConstExpression
+  136                | ConstExpression . MINUS_SYM ConstExpression
+  137                | ConstExpression . MOD_SYM ConstExpression
+  138                | ConstExpression . MULT_SYM ConstExpression
+  139                | ConstExpression . NEQ_SYM ConstExpression
+  140                | ConstExpression . OR_SYM ConstExpression
+  141                | ConstExpression . PLUS_SYM ConstExpression
+
+    DIV_SYM    shift, and go to state 129
+    EQ_SYM     shift, and go to state 130
+    GTE_SYM    shift, and go to state 131
+    GT_SYM     shift, and go to state 132
+    LTE_SYM    shift, and go to state 133
+    LT_SYM     shift, and go to state 134
+    MINUS_SYM  shift, and go to state 135
+    MOD_SYM    shift, and go to state 136
+    MULT_SYM   shift, and go to state 137
+    PLUS_SYM   shift, and go to state 138
+    NEQ_SYM    shift, and go to state 142
+
+    $default  reduce using rule 129 (ConstExpression)
+
+
+State 207
+
+  129 ConstExpression: ConstExpression . AND_SYM ConstExpression
+  130                | ConstExpression . DIV_SYM ConstExpression
+  131                | ConstExpression . EQ_SYM ConstExpression
+  132                | ConstExpression . GTE_SYM ConstExpression
+  133                | ConstExpression . GT_SYM ConstExpression
+  134                | ConstExpression . LTE_SYM ConstExpression
+  135                | ConstExpression . LT_SYM ConstExpression
+  136                | ConstExpression . MINUS_SYM ConstExpression
+  137                | ConstExpression . MOD_SYM ConstExpression
+  138                | ConstExpression . MULT_SYM ConstExpression
+  139                | ConstExpression . NEQ_SYM ConstExpression
+  140                | ConstExpression . OR_SYM ConstExpression
+  140                | ConstExpression OR_SYM ConstExpression .
+  141                | ConstExpression . PLUS_SYM ConstExpression
+
+    DIV_SYM    shift, and go to state 129
+    EQ_SYM     shift, and go to state 130
+    GTE_SYM    shift, and go to state 131
+    GT_SYM     shift, and go to state 132
+    LTE_SYM    shift, and go to state 133
+    LT_SYM     shift, and go to state 134
+    MINUS_SYM  shift, and go to state 135
+    MOD_SYM    shift, and go to state 136
+    MULT_SYM   shift, and go to state 137
+    PLUS_SYM   shift, and go to state 138
+    NEQ_SYM    shift, and go to state 142
+
+    $default  reduce using rule 140 (ConstExpression)
+
+
+State 208
+
+  129 ConstExpression: ConstExpression . AND_SYM ConstExpression
+  130                | ConstExpression . DIV_SYM ConstExpression
+  131                | ConstExpression . EQ_SYM ConstExpression
+  132                | ConstExpression . GTE_SYM ConstExpression
+  133                | ConstExpression . GT_SYM ConstExpression
+  134                | ConstExpression . LTE_SYM ConstExpression
+  135                | ConstExpression . LT_SYM ConstExpression
+  136                | ConstExpression . MINUS_SYM ConstExpression
+  137                | ConstExpression . MOD_SYM ConstExpression
+  138                | ConstExpression . MULT_SYM ConstExpression
+  139                | ConstExpression . NEQ_SYM ConstExpression
+  139                | ConstExpression NEQ_SYM ConstExpression .
+  140                | ConstExpression . OR_SYM ConstExpression
+  141                | ConstExpression . PLUS_SYM ConstExpression
+
+    EQ_SYM   error (nonassociative)
+    GTE_SYM  error (nonassociative)
+    GT_SYM   error (nonassociative)
+    LTE_SYM  error (nonassociative)
+    LT_SYM   error (nonassociative)
+    NEQ_SYM  error (nonassociative)
+
+    $default  reduce using rule 139 (ConstExpression)
+
+
+State 209
+
+  124 Expression: CHR_SYM LPAREN_SYM Expression RPAREN_SYM .
+
+    $default  reduce using rule 124 (Expression)
+
+
+State 210
+
+   85 ForBegin: FOR_SYM IDENT_SYM ASSIGN_SYM Expression .
+  101 Expression: Expression . AND_SYM Expression
+  102           | Expression . DIV_SYM Expression
+  103           | Expression . EQ_SYM Expression
+  104           | Expression . GTE_SYM Expression
+  105           | Expression . GT_SYM Expression
+  106           | Expression . LTE_SYM Expression
+  107           | Expression . LT_SYM Expression
+  108           | Expression . MINUS_SYM Expression
+  109           | Expression . MOD_SYM Expression
+  110           | Expression . MULT_SYM Expression
+  111           | Expression . NEQ_SYM Expression
+  112           | Expression . OR_SYM Expression
+  113           | Expression . PLUS_SYM Expression
+
+    DIV_SYM    shift, and go to state 105
+    EQ_SYM     shift, and go to state 106
+    GTE_SYM    shift, and go to state 107
+    GT_SYM     shift, and go to state 108
+    LTE_SYM    shift, and go to state 109
+    LT_SYM     shift, and go to state 110
+    MINUS_SYM  shift, and go to state 111
+    MOD_SYM    shift, and go to state 112
+    MULT_SYM   shift, and go to state 113
+    PLUS_SYM   shift, and go to state 114
+    AND_SYM    shift, and go to state 115
+    OR_SYM     shift, and go to state 116
+    NEQ_SYM    shift, and go to state 117
+
+    $default  reduce using rule 85 (ForBegin)
+
+
+State 211
+
+  148 LValues: DOT_SYM IDENT_SYM LValues .
+
+    $default  reduce using rule 148 (LValues)
+
+
+State 212
+
+  149 LValues: LBRACKET_SYM Expression RBRACKET_SYM . LValues
+
+    DOT_SYM       shift, and go to state 78
+    LBRACKET_SYM  shift, and go to state 79
+
+    $default  reduce using rule 147 (LValues)
+
+    LValues  go to state 236
+
+
+State 213
+
+   95 ProcedureCall: IDENT_SYM LPAREN_SYM Optional_Arguments RPAREN_SYM .
+  145 FunctionCall: IDENT_SYM LPAREN_SYM Optional_Arguments RPAREN_SYM .
+
+    ELSEIF_SYM     reduce using rule 95 (ProcedureCall)
+    ELSEIF_SYM     [reduce using rule 145 (FunctionCall)]
+    ELSE_SYM       reduce using rule 95 (ProcedureCall)
+    ELSE_SYM       [reduce using rule 145 (FunctionCall)]
+    END_SYM        reduce using rule 95 (ProcedureCall)
+    END_SYM        [reduce using rule 145 (FunctionCall)]
+    SEMICOLON_SYM  reduce using rule 95 (ProcedureCall)
+    SEMICOLON_SYM  [reduce using rule 145 (FunctionCall)]
+    UNTIL_SYM      reduce using rule 95 (ProcedureCall)
+    UNTIL_SYM      [reduce using rule 145 (FunctionCall)]
+    $default       reduce using rule 145 (FunctionCall)
+
+
+State 214
+
+   98 Arguments: Arguments COMMA_SYM . Expression
+
+    CHAR_SYM    shift, and go to state 20
+    CHR_SYM     shift, and go to state 21
+    IDENT_SYM   shift, and go to state 82
+    INT_SYM     shift, and go to state 25
+    LPAREN_SYM  shift, and go to state 26
+    MINUS_SYM   shift, and go to state 27
+    NOT_SYM     shift, and go to state 28
+    ORD_SYM     shift, and go to state 29
+    PRED_SYM    shift, and go to state 30
+    STRING_SYM  shift, and go to state 35
+    SUCC_SYM    shift, and go to state 36
+
+    Expression    go to state 237
+    FunctionCall  go to state 62
+    LValue        go to state 84
+
+
+State 215
+
+  145 FunctionCall: IDENT_SYM LPAREN_SYM Optional_Arguments . RPAREN_SYM
+
+    RPAREN_SYM  shift, and go to state 238
+
+
+State 216
+
+  121 Expression: ORD_SYM LPAREN_SYM Expression RPAREN_SYM .
+
+    $default  reduce using rule 121 (Expression)
+
+
+State 217
+
+  122 Expression: PRED_SYM LPAREN_SYM Expression RPAREN_SYM .
+
+    $default  reduce using rule 122 (Expression)
+
+
+State 218
+
+  146 LValue: IDENT_SYM . LValues
+
+    DOT_SYM       shift, and go to state 78
+    LBRACKET_SYM  shift, and go to state 79
+
+    $default  reduce using rule 147 (LValues)
+
+    LValues  go to state 81
+
+
+State 219
+
+   89 ReadStatement: READ_SYM LPAREN_SYM ReadArgs LValue . RPAREN_SYM
+   91 ReadArgs: ReadArgs LValue . COMMA_SYM
+
+    COMMA_SYM   shift, and go to state 239
+    RPAREN_SYM  shift, and go to state 240
+
+
+State 220
+
+  123 Expression: SUCC_SYM LPAREN_SYM Expression RPAREN_SYM .
+
+    $default  reduce using rule 123 (Expression)
+
+
+State 221
+
+   92 WriteStatement: WRITE_SYM LPAREN_SYM WriteArgs Expression . RPAREN_SYM
+   94 WriteArgs: WriteArgs Expression . COMMA_SYM
+  101 Expression: Expression . AND_SYM Expression
+  102           | Expression . DIV_SYM Expression
+  103           | Expression . EQ_SYM Expression
+  104           | Expression . GTE_SYM Expression
+  105           | Expression . GT_SYM Expression
+  106           | Expression . LTE_SYM Expression
+  107           | Expression . LT_SYM Expression
+  108           | Expression . MINUS_SYM Expression
+  109           | Expression . MOD_SYM Expression
+  110           | Expression . MULT_SYM Expression
+  111           | Expression . NEQ_SYM Expression
+  112           | Expression . OR_SYM Expression
+  113           | Expression . PLUS_SYM Expression
+
+    COMMA_SYM   shift, and go to state 241
+    DIV_SYM     shift, and go to state 105
+    EQ_SYM      shift, and go to state 106
+    GTE_SYM     shift, and go to state 107
+    GT_SYM      shift, and go to state 108
+    LTE_SYM     shift, and go to state 109
+    LT_SYM      shift, and go to state 110
+    MINUS_SYM   shift, and go to state 111
+    MOD_SYM     shift, and go to state 112
+    MULT_SYM    shift, and go to state 113
+    PLUS_SYM    shift, and go to state 114
+    RPAREN_SYM  shift, and go to state 242
+    AND_SYM     shift, and go to state 115
+    OR_SYM      shift, and go to state 116
+    NEQ_SYM     shift, and go to state 117
+
+
+State 222
+
+   67 ElseIfList: ElseIfList ElseIfHead THEN_SYM . StatementSequence
+
+    $default  reduce using rule 48 (StatementSequences)
+
+    StatementSequence   go to state 243
+    StatementSequences  go to state 13
+
+
+State 223
+
+   68 ElseIfHead: ElseBegin Expression .
+  101 Expression: Expression . AND_SYM Expression
+  102           | Expression . DIV_SYM Expression
+  103           | Expression . EQ_SYM Expression
+  104           | Expression . GTE_SYM Expression
+  105           | Expression . GT_SYM Expression
+  106           | Expression . LTE_SYM Expression
+  107           | Expression . LT_SYM Expression
+  108           | Expression . MINUS_SYM Expression
+  109           | Expression . MOD_SYM Expression
+  110           | Expression . MULT_SYM Expression
+  111           | Expression . NEQ_SYM Expression
+  112           | Expression . OR_SYM Expression
+  113           | Expression . PLUS_SYM Expression
+
+    DIV_SYM    shift, and go to state 105
+    EQ_SYM     shift, and go to state 106
+    GTE_SYM    shift, and go to state 107
+    GT_SYM     shift, and go to state 108
+    LTE_SYM    shift, and go to state 109
+    LT_SYM     shift, and go to state 110
+    MINUS_SYM  shift, and go to state 111
+    MOD_SYM    shift, and go to state 112
+    MULT_SYM   shift, and go to state 113
+    PLUS_SYM   shift, and go to state 114
+    AND_SYM    shift, and go to state 115
+    OR_SYM     shift, and go to state 116
+    NEQ_SYM    shift, and go to state 117
+
+    $default  reduce using rule 68 (ElseIfHead)
+
+
+State 224
+
+   63 IfStatement: IfHead ElseIfList ElseClause END_SYM .
+
+    $default  reduce using rule 63 (IfStatement)
+
+
+State 225
+
+   71 ElseClause: ElseStart StatementSequence .
+
+    $default  reduce using rule 71 (ElseClause)
+
+
+State 226
+
+   73 WhileStatement: WhileHead DO_SYM StatementSequence END_SYM .
+
+    $default  reduce using rule 73 (WhileStatement)
+
+
+State 227
+
+   81 ForInc: ForIncGuts DO_SYM StatementSequence END_SYM .
+
+    $default  reduce using rule 81 (ForInc)
+
+
+State 228
+
+   83 ForDec: ForDecGuts DO_SYM StatementSequence END_SYM .
+
+    $default  reduce using rule 83 (ForDec)
+
+
+State 229
+
+   39 ArrayType: ARRAY_SYM LBRACKET_SYM . ConstExpression COLON_SYM ConstExpression RBRACKET_SYM OF_SYM Type
+
+    CHAR_SYM    shift, and go to state 68
+    IDENT_SYM   shift, and go to state 69
+    INT_SYM     shift, and go to state 70
+    LPAREN_SYM  shift, and go to state 71
+    MINUS_SYM   shift, and go to state 72
+    NOT_SYM     shift, and go to state 73
+    STRING_SYM  shift, and go to state 74
+
+    ConstExpression  go to state 244
+
+
+State 230
+
+   36 RecordType: RECORD_SYM RecordTypeDecls . END_SYM
+   38 RecordTypeDecls: RecordTypeDecls . IdentList COLON_SYM Type SEMICOLON_SYM
+
+    END_SYM  shift, and go to state 245
+
+    $default  reduce using rule 41 (IdentLists)
+
+    IdentList   go to state 246
+    IdentLists  go to state 121
+
+
+State 231
+
+   29 TypeDecl: TYPE_SYM TypeDecls IDENT_SYM EQ_SYM Type SEMICOLON_SYM .
+   31 TypeDecls: TypeDecls IDENT_SYM EQ_SYM Type SEMICOLON_SYM .
+
+    IDENT_SYM  reduce using rule 31 (TypeDecls)
+    $default   reduce using rule 29 (TypeDecl)
+
+
+State 232
+
+   44 VarDecl: VAR_SYM VarDecls IdentList COLON_SYM Type . SEMICOLON_SYM
+   46 VarDecls: VarDecls IdentList COLON_SYM Type . SEMICOLON_SYM
+
+    SEMICOLON_SYM  shift, and go to state 247
+
+
+State 233
+
+   42 IdentLists: IdentLists IDENT_SYM COMMA_SYM .
+
+    $default  reduce using rule 42 (IdentLists)
+
+
+State 234
+
+   12 FunctionDecl: FUNCTION_SYM IDENT_SYM LPAREN_SYM . Optional_FormalParameters RPAREN_SYM COLON_SYM Type SEMICOLON_SYM FORWARD_SYM SEMICOLON_SYM
+   13             | FUNCTION_SYM IDENT_SYM LPAREN_SYM . Optional_FormalParameters RPAREN_SYM COLON_SYM Type SEMICOLON_SYM Body SEMICOLON_SYM
+
+    REF_SYM  shift, and go to state 248
+    VAR_SYM  shift, and go to state 249
+
+    IDENT_SYM  reduce using rule 21 (Optional_Var)
+    $default   reduce using rule 15 (Optional_FormalParameters)
+
+    Optional_FormalParameters  go to state 250
+    FormalParameters           go to state 251
+    FormalParameter            go to state 252
+    Optional_Var               go to state 253
+
+
+State 235
+
+   10 ProcedureDecl: PROCEDURE_SYM IDENT_SYM LPAREN_SYM . Optional_FormalParameters RPAREN_SYM SEMICOLON_SYM FORWARD_SYM SEMICOLON_SYM
+   11              | PROCEDURE_SYM IDENT_SYM LPAREN_SYM . Optional_FormalParameters RPAREN_SYM SEMICOLON_SYM Body SEMICOLON_SYM
+
+    REF_SYM  shift, and go to state 248
+    VAR_SYM  shift, and go to state 249
+
+    IDENT_SYM  reduce using rule 21 (Optional_Var)
+    $default   reduce using rule 15 (Optional_FormalParameters)
+
+    Optional_FormalParameters  go to state 254
+    FormalParameters           go to state 251
+    FormalParameter            go to state 252
+    Optional_Var               go to state 253
+
+
+State 236
+
+  149 LValues: LBRACKET_SYM Expression RBRACKET_SYM LValues .
+
+    $default  reduce using rule 149 (LValues)
+
+
+State 237
+
+   98 Arguments: Arguments COMMA_SYM Expression .
+  101 Expression: Expression . AND_SYM Expression
+  102           | Expression . DIV_SYM Expression
+  103           | Expression . EQ_SYM Expression
+  104           | Expression . GTE_SYM Expression
+  105           | Expression . GT_SYM Expression
+  106           | Expression . LTE_SYM Expression
+  107           | Expression . LT_SYM Expression
+  108           | Expression . MINUS_SYM Expression
+  109           | Expression . MOD_SYM Expression
+  110           | Expression . MULT_SYM Expression
+  111           | Expression . NEQ_SYM Expression
+  112           | Expression . OR_SYM Expression
+  113           | Expression . PLUS_SYM Expression
+
+    DIV_SYM    shift, and go to state 105
+    EQ_SYM     shift, and go to state 106
+    GTE_SYM    shift, and go to state 107
+    GT_SYM     shift, and go to state 108
+    LTE_SYM    shift, and go to state 109
+    LT_SYM     shift, and go to state 110
+    MINUS_SYM  shift, and go to state 111
+    MOD_SYM    shift, and go to state 112
+    MULT_SYM   shift, and go to state 113
+    PLUS_SYM   shift, and go to state 114
+    AND_SYM    shift, and go to state 115
+    OR_SYM     shift, and go to state 116
+    NEQ_SYM    shift, and go to state 117
+
+    $default  reduce using rule 98 (Arguments)
+
+
+State 238
+
+  145 FunctionCall: IDENT_SYM LPAREN_SYM Optional_Arguments RPAREN_SYM .
+
+    $default  reduce using rule 145 (FunctionCall)
+
+
+State 239
+
+   91 ReadArgs: ReadArgs LValue COMMA_SYM .
+
+    $default  reduce using rule 91 (ReadArgs)
+
+
+State 240
+
+   89 ReadStatement: READ_SYM LPAREN_SYM ReadArgs LValue RPAREN_SYM .
+
+    $default  reduce using rule 89 (ReadStatement)
+
+
+State 241
+
+   94 WriteArgs: WriteArgs Expression COMMA_SYM .
+
+    $default  reduce using rule 94 (WriteArgs)
+
+
+State 242
+
+   92 WriteStatement: WRITE_SYM LPAREN_SYM WriteArgs Expression RPAREN_SYM .
+
+    $default  reduce using rule 92 (WriteStatement)
+
+
+State 243
+
+   67 ElseIfList: ElseIfList ElseIfHead THEN_SYM StatementSequence .
+
+    $default  reduce using rule 67 (ElseIfList)
+
+
+State 244
+
+   39 ArrayType: ARRAY_SYM LBRACKET_SYM ConstExpression . COLON_SYM ConstExpression RBRACKET_SYM OF_SYM Type
+  129 ConstExpression: ConstExpression . AND_SYM ConstExpression
+  130                | ConstExpression . DIV_SYM ConstExpression
+  131                | ConstExpression . EQ_SYM ConstExpression
+  132                | ConstExpression . GTE_SYM ConstExpression
+  133                | ConstExpression . GT_SYM ConstExpression
+  134                | ConstExpression . LTE_SYM ConstExpression
+  135                | ConstExpression . LT_SYM ConstExpression
+  136                | ConstExpression . MINUS_SYM ConstExpression
+  137                | ConstExpression . MOD_SYM ConstExpression
+  138                | ConstExpression . MULT_SYM ConstExpression
+  139                | ConstExpression . NEQ_SYM ConstExpression
+  140                | ConstExpression . OR_SYM ConstExpression
+  141                | ConstExpression . PLUS_SYM ConstExpression
+
+    COLON_SYM  shift, and go to state 255
+    DIV_SYM    shift, and go to state 129
+    EQ_SYM     shift, and go to state 130
+    GTE_SYM    shift, and go to state 131
+    GT_SYM     shift, and go to state 132
+    LTE_SYM    shift, and go to state 133
+    LT_SYM     shift, and go to state 134
+    MINUS_SYM  shift, and go to state 135
+    MOD_SYM    shift, and go to state 136
+    MULT_SYM   shift, and go to state 137
+    PLUS_SYM   shift, and go to state 138
+    AND_SYM    shift, and go to state 140
+    OR_SYM     shift, and go to state 141
+    NEQ_SYM    shift, and go to state 142
+
+
+State 245
+
+   36 RecordType: RECORD_SYM RecordTypeDecls END_SYM .
+
+    $default  reduce using rule 36 (RecordType)
+
+
+State 246
+
+   38 RecordTypeDecls: RecordTypeDecls IdentList . COLON_SYM Type SEMICOLON_SYM
+
+    COLON_SYM  shift, and go to state 256
+
+
+State 247
+
+   44 VarDecl: VAR_SYM VarDecls IdentList COLON_SYM Type SEMICOLON_SYM .
+   46 VarDecls: VarDecls IdentList COLON_SYM Type SEMICOLON_SYM .
+
+    IDENT_SYM  reduce using rule 46 (VarDecls)
+    $default   reduce using rule 44 (VarDecl)
+
+
+State 248
+
+   20 Optional_Var: REF_SYM .
+
+    $default  reduce using rule 20 (Optional_Var)
+
+
+State 249
+
+   19 Optional_Var: VAR_SYM .
+
+    $default  reduce using rule 19 (Optional_Var)
+
+
+State 250
+
+   12 FunctionDecl: FUNCTION_SYM IDENT_SYM LPAREN_SYM Optional_FormalParameters . RPAREN_SYM COLON_SYM Type SEMICOLON_SYM FORWARD_SYM SEMICOLON_SYM
+   13             | FUNCTION_SYM IDENT_SYM LPAREN_SYM Optional_FormalParameters . RPAREN_SYM COLON_SYM Type SEMICOLON_SYM Body SEMICOLON_SYM
+
+    RPAREN_SYM  shift, and go to state 257
+
+
+State 251
+
+   14 Optional_FormalParameters: FormalParameters .
+   17 FormalParameters: FormalParameters . SEMICOLON_SYM FormalParameter
+
+    SEMICOLON_SYM  shift, and go to state 258
+
+    $default  reduce using rule 14 (Optional_FormalParameters)
+
+
+State 252
+
+   16 FormalParameters: FormalParameter .
+
+    $default  reduce using rule 16 (FormalParameters)
+
+
+State 253
+
+   18 FormalParameter: Optional_Var . IdentList COLON_SYM Type
+
+    $default  reduce using rule 41 (IdentLists)
+
+    IdentList   go to state 259
+    IdentLists  go to state 121
+
+
+State 254
+
+   10 ProcedureDecl: PROCEDURE_SYM IDENT_SYM LPAREN_SYM Optional_FormalParameters . RPAREN_SYM SEMICOLON_SYM FORWARD_SYM SEMICOLON_SYM
+   11              | PROCEDURE_SYM IDENT_SYM LPAREN_SYM Optional_FormalParameters . RPAREN_SYM SEMICOLON_SYM Body SEMICOLON_SYM
+
+    RPAREN_SYM  shift, and go to state 260
+
+
+State 255
+
+   39 ArrayType: ARRAY_SYM LBRACKET_SYM ConstExpression COLON_SYM . ConstExpression RBRACKET_SYM OF_SYM Type
+
+    CHAR_SYM    shift, and go to state 68
+    IDENT_SYM   shift, and go to state 69
+    INT_SYM     shift, and go to state 70
+    LPAREN_SYM  shift, and go to state 71
+    MINUS_SYM   shift, and go to state 72
+    NOT_SYM     shift, and go to state 73
+    STRING_SYM  shift, and go to state 74
+
+    ConstExpression  go to state 261
+
+
+State 256
+
+   38 RecordTypeDecls: RecordTypeDecls IdentList COLON_SYM . Type SEMICOLON_SYM
+
+    ARRAY_SYM   shift, and go to state 184
+    IDENT_SYM   shift, and go to state 185
+    RECORD_SYM  shift, and go to state 186
+
+    Type        go to state 262
+    SimpleType  go to state 188
+    RecordType  go to state 189
+    ArrayType   go to state 190
+
+
+State 257
+
+   12 FunctionDecl: FUNCTION_SYM IDENT_SYM LPAREN_SYM Optional_FormalParameters RPAREN_SYM . COLON_SYM Type SEMICOLON_SYM FORWARD_SYM SEMICOLON_SYM
+   13             | FUNCTION_SYM IDENT_SYM LPAREN_SYM Optional_FormalParameters RPAREN_SYM . COLON_SYM Type SEMICOLON_SYM Body SEMICOLON_SYM
+
+    COLON_SYM  shift, and go to state 263
+
+
+State 258
+
+   17 FormalParameters: FormalParameters SEMICOLON_SYM . FormalParameter
+
+    REF_SYM  shift, and go to state 248
+    VAR_SYM  shift, and go to state 249
+
+    $default  reduce using rule 21 (Optional_Var)
+
+    FormalParameter  go to state 264
+    Optional_Var     go to state 253
+
+
+State 259
+
+   18 FormalParameter: Optional_Var IdentList . COLON_SYM Type
+
+    COLON_SYM  shift, and go to state 265
+
+
+State 260
+
+   10 ProcedureDecl: PROCEDURE_SYM IDENT_SYM LPAREN_SYM Optional_FormalParameters RPAREN_SYM . SEMICOLON_SYM FORWARD_SYM SEMICOLON_SYM
+   11              | PROCEDURE_SYM IDENT_SYM LPAREN_SYM Optional_FormalParameters RPAREN_SYM . SEMICOLON_SYM Body SEMICOLON_SYM
+
+    SEMICOLON_SYM  shift, and go to state 266
+
+
+State 261
+
+   39 ArrayType: ARRAY_SYM LBRACKET_SYM ConstExpression COLON_SYM ConstExpression . RBRACKET_SYM OF_SYM Type
+  129 ConstExpression: ConstExpression . AND_SYM ConstExpression
+  130                | ConstExpression . DIV_SYM ConstExpression
+  131                | ConstExpression . EQ_SYM ConstExpression
+  132                | ConstExpression . GTE_SYM ConstExpression
+  133                | ConstExpression . GT_SYM ConstExpression
+  134                | ConstExpression . LTE_SYM ConstExpression
+  135                | ConstExpression . LT_SYM ConstExpression
+  136                | ConstExpression . MINUS_SYM ConstExpression
+  137                | ConstExpression . MOD_SYM ConstExpression
+  138                | ConstExpression . MULT_SYM ConstExpression
+  139                | ConstExpression . NEQ_SYM ConstExpression
+  140                | ConstExpression . OR_SYM ConstExpression
+  141                | ConstExpression . PLUS_SYM ConstExpression
+
+    DIV_SYM       shift, and go to state 129
+    EQ_SYM        shift, and go to state 130
+    GTE_SYM       shift, and go to state 131
+    GT_SYM        shift, and go to state 132
+    LTE_SYM       shift, and go to state 133
+    LT_SYM        shift, and go to state 134
+    MINUS_SYM     shift, and go to state 135
+    MOD_SYM       shift, and go to state 136
+    MULT_SYM      shift, and go to state 137
+    PLUS_SYM      shift, and go to state 138
+    RBRACKET_SYM  shift, and go to state 267
+    AND_SYM       shift, and go to state 140
+    OR_SYM        shift, and go to state 141
+    NEQ_SYM       shift, and go to state 142
+
+
+State 262
+
+   38 RecordTypeDecls: RecordTypeDecls IdentList COLON_SYM Type . SEMICOLON_SYM
+
+    SEMICOLON_SYM  shift, and go to state 268
+
+
+State 263
+
+   12 FunctionDecl: FUNCTION_SYM IDENT_SYM LPAREN_SYM Optional_FormalParameters RPAREN_SYM COLON_SYM . Type SEMICOLON_SYM FORWARD_SYM SEMICOLON_SYM
+   13             | FUNCTION_SYM IDENT_SYM LPAREN_SYM Optional_FormalParameters RPAREN_SYM COLON_SYM . Type SEMICOLON_SYM Body SEMICOLON_SYM
+
+    ARRAY_SYM   shift, and go to state 184
+    IDENT_SYM   shift, and go to state 185
+    RECORD_SYM  shift, and go to state 186
+
+    Type        go to state 269
+    SimpleType  go to state 188
+    RecordType  go to state 189
+    ArrayType   go to state 190
+
+
+State 264
+
+   17 FormalParameters: FormalParameters SEMICOLON_SYM FormalParameter .
+
+    $default  reduce using rule 17 (FormalParameters)
+
+
+State 265
+
+   18 FormalParameter: Optional_Var IdentList COLON_SYM . Type
+
+    ARRAY_SYM   shift, and go to state 184
+    IDENT_SYM   shift, and go to state 185
+    RECORD_SYM  shift, and go to state 186
+
+    Type        go to state 270
+    SimpleType  go to state 188
+    RecordType  go to state 189
+    ArrayType   go to state 190
+
+
+State 266
+
+   10 ProcedureDecl: PROCEDURE_SYM IDENT_SYM LPAREN_SYM Optional_FormalParameters RPAREN_SYM SEMICOLON_SYM . FORWARD_SYM SEMICOLON_SYM
+   11              | PROCEDURE_SYM IDENT_SYM LPAREN_SYM Optional_FormalParameters RPAREN_SYM SEMICOLON_SYM . Body SEMICOLON_SYM
+
+    CONST_SYM    shift, and go to state 271
+    FORWARD_SYM  shift, and go to state 272
+
+    $default  reduce using rule 23 (Optional_ConstDecl)
+
+    Body                go to state 273
+    Optional_ConstDecl  go to state 274
+
+
+State 267
+
+   39 ArrayType: ARRAY_SYM LBRACKET_SYM ConstExpression COLON_SYM ConstExpression RBRACKET_SYM . OF_SYM Type
+
+    OF_SYM  shift, and go to state 275
+
+
+State 268
+
+   38 RecordTypeDecls: RecordTypeDecls IdentList COLON_SYM Type SEMICOLON_SYM .
+
+    $default  reduce using rule 38 (RecordTypeDecls)
+
+
+State 269
+
+   12 FunctionDecl: FUNCTION_SYM IDENT_SYM LPAREN_SYM Optional_FormalParameters RPAREN_SYM COLON_SYM Type . SEMICOLON_SYM FORWARD_SYM SEMICOLON_SYM
+   13             | FUNCTION_SYM IDENT_SYM LPAREN_SYM Optional_FormalParameters RPAREN_SYM COLON_SYM Type . SEMICOLON_SYM Body SEMICOLON_SYM
+
+    SEMICOLON_SYM  shift, and go to state 276
+
+
+State 270
+
+   18 FormalParameter: Optional_Var IdentList COLON_SYM Type .
+
+    $default  reduce using rule 18 (FormalParameter)
+
+
+State 271
+
+   24 Optional_ConstDecl: CONST_SYM . Optional_ConstDecls IDENT_SYM EQ_SYM ConstExpression SEMICOLON_SYM
+
+    $default  reduce using rule 25 (Optional_ConstDecls)
+
+    Optional_ConstDecls  go to state 277
+
+
+State 272
+
+   10 ProcedureDecl: PROCEDURE_SYM IDENT_SYM LPAREN_SYM Optional_FormalParameters RPAREN_SYM SEMICOLON_SYM FORWARD_SYM . SEMICOLON_SYM
+
+    SEMICOLON_SYM  shift, and go to state 278
+
+
+State 273
+
+   11 ProcedureDecl: PROCEDURE_SYM IDENT_SYM LPAREN_SYM Optional_FormalParameters RPAREN_SYM SEMICOLON_SYM Body . SEMICOLON_SYM
+
+    SEMICOLON_SYM  shift, and go to state 279
+
+
+State 274
+
+   22 Body: Optional_ConstDecl . TypeDecl VarDecl Block
+
+    TYPE_SYM  shift, and go to state 9
+
+    $default  reduce using rule 28 (TypeDecl)
+
+    TypeDecl  go to state 280
+
+
+State 275
+
+   39 ArrayType: ARRAY_SYM LBRACKET_SYM ConstExpression COLON_SYM ConstExpression RBRACKET_SYM OF_SYM . Type
+
+    ARRAY_SYM   shift, and go to state 184
+    IDENT_SYM   shift, and go to state 185
+    RECORD_SYM  shift, and go to state 186
+
+    Type        go to state 281
+    SimpleType  go to state 188
+    RecordType  go to state 189
+    ArrayType   go to state 190
+
+
+State 276
+
+   12 FunctionDecl: FUNCTION_SYM IDENT_SYM LPAREN_SYM Optional_FormalParameters RPAREN_SYM COLON_SYM Type SEMICOLON_SYM . FORWARD_SYM SEMICOLON_SYM
+   13             | FUNCTION_SYM IDENT_SYM LPAREN_SYM Optional_FormalParameters RPAREN_SYM COLON_SYM Type SEMICOLON_SYM . Body SEMICOLON_SYM
+
+    CONST_SYM    shift, and go to state 271
+    FORWARD_SYM  shift, and go to state 282
+
+    $default  reduce using rule 23 (Optional_ConstDecl)
+
+    Body                go to state 283
+    Optional_ConstDecl  go to state 274
+
+
+State 277
+
+   24 Optional_ConstDecl: CONST_SYM Optional_ConstDecls . IDENT_SYM EQ_SYM ConstExpression SEMICOLON_SYM
+   26 Optional_ConstDecls: Optional_ConstDecls . IDENT_SYM EQ_SYM ConstExpression SEMICOLON_SYM
+
+    IDENT_SYM  shift, and go to state 284
+
+
+State 278
+
+   10 ProcedureDecl: PROCEDURE_SYM IDENT_SYM LPAREN_SYM Optional_FormalParameters RPAREN_SYM SEMICOLON_SYM FORWARD_SYM SEMICOLON_SYM .
+
+    $default  reduce using rule 10 (ProcedureDecl)
+
+
+State 279
+
+   11 ProcedureDecl: PROCEDURE_SYM IDENT_SYM LPAREN_SYM Optional_FormalParameters RPAREN_SYM SEMICOLON_SYM Body SEMICOLON_SYM .
+
+    $default  reduce using rule 11 (ProcedureDecl)
+
+
+State 280
+
+   22 Body: Optional_ConstDecl TypeDecl . VarDecl Block
+
+    VAR_SYM  shift, and go to state 16
+
+    $default  reduce using rule 43 (VarDecl)
+
+    VarDecl  go to state 285
+
+
+State 281
+
+   39 ArrayType: ARRAY_SYM LBRACKET_SYM ConstExpression COLON_SYM ConstExpression RBRACKET_SYM OF_SYM Type .
+
+    $default  reduce using rule 39 (ArrayType)
+
+
+State 282
+
+   12 FunctionDecl: FUNCTION_SYM IDENT_SYM LPAREN_SYM Optional_FormalParameters RPAREN_SYM COLON_SYM Type SEMICOLON_SYM FORWARD_SYM . SEMICOLON_SYM
+
+    SEMICOLON_SYM  shift, and go to state 286
+
+
+State 283
+
+   13 FunctionDecl: FUNCTION_SYM IDENT_SYM LPAREN_SYM Optional_FormalParameters RPAREN_SYM COLON_SYM Type SEMICOLON_SYM Body . SEMICOLON_SYM
+
+    SEMICOLON_SYM  shift, and go to state 287
+
+
+State 284
+
+   24 Optional_ConstDecl: CONST_SYM Optional_ConstDecls IDENT_SYM . EQ_SYM ConstExpression SEMICOLON_SYM
+   26 Optional_ConstDecls: Optional_ConstDecls IDENT_SYM . EQ_SYM ConstExpression SEMICOLON_SYM
+
+    EQ_SYM  shift, and go to state 288
+
+
+State 285
+
+   22 Body: Optional_ConstDecl TypeDecl VarDecl . Block
+
+    BEGIN_SYM  shift, and go to state 7
+
+    Block  go to state 289
+
+
+State 286
+
+   12 FunctionDecl: FUNCTION_SYM IDENT_SYM LPAREN_SYM Optional_FormalParameters RPAREN_SYM COLON_SYM Type SEMICOLON_SYM FORWARD_SYM SEMICOLON_SYM .
+
+    $default  reduce using rule 12 (FunctionDecl)
+
+
+State 287
+
+   13 FunctionDecl: FUNCTION_SYM IDENT_SYM LPAREN_SYM Optional_FormalParameters RPAREN_SYM COLON_SYM Type SEMICOLON_SYM Body SEMICOLON_SYM .
+
+    $default  reduce using rule 13 (FunctionDecl)
+
+
+State 288
+
+   24 Optional_ConstDecl: CONST_SYM Optional_ConstDecls IDENT_SYM EQ_SYM . ConstExpression SEMICOLON_SYM
+   26 Optional_ConstDecls: Optional_ConstDecls IDENT_SYM EQ_SYM . ConstExpression SEMICOLON_SYM
+
+    CHAR_SYM    shift, and go to state 68
+    IDENT_SYM   shift, and go to state 69
+    INT_SYM     shift, and go to state 70
+    LPAREN_SYM  shift, and go to state 71
+    MINUS_SYM   shift, and go to state 72
+    NOT_SYM     shift, and go to state 73
+    STRING_SYM  shift, and go to state 74
+
+    ConstExpression  go to state 290
+
+
+State 289
+
+   22 Body: Optional_ConstDecl TypeDecl VarDecl Block .
+
+    $default  reduce using rule 22 (Body)
+
+
+State 290
+
+   24 Optional_ConstDecl: CONST_SYM Optional_ConstDecls IDENT_SYM EQ_SYM ConstExpression . SEMICOLON_SYM
+   26 Optional_ConstDecls: Optional_ConstDecls IDENT_SYM EQ_SYM ConstExpression . SEMICOLON_SYM
+  129 ConstExpression: ConstExpression . AND_SYM ConstExpression
+  130                | ConstExpression . DIV_SYM ConstExpression
+  131                | ConstExpression . EQ_SYM ConstExpression
+  132                | ConstExpression . GTE_SYM ConstExpression
+  133                | ConstExpression . GT_SYM ConstExpression
+  134                | ConstExpression . LTE_SYM ConstExpression
+  135                | ConstExpression . LT_SYM ConstExpression
+  136                | ConstExpression . MINUS_SYM ConstExpression
+  137                | ConstExpression . MOD_SYM ConstExpression
+  138                | ConstExpression . MULT_SYM ConstExpression
+  139                | ConstExpression . NEQ_SYM ConstExpression
+  140                | ConstExpression . OR_SYM ConstExpression
+  141                | ConstExpression . PLUS_SYM ConstExpression
+
+    DIV_SYM        shift, and go to state 129
+    EQ_SYM         shift, and go to state 130
+    GTE_SYM        shift, and go to state 131
+    GT_SYM         shift, and go to state 132
+    LTE_SYM        shift, and go to state 133
+    LT_SYM         shift, and go to state 134
+    MINUS_SYM      shift, and go to state 135
+    MOD_SYM        shift, and go to state 136
+    MULT_SYM       shift, and go to state 137
+    PLUS_SYM       shift, and go to state 138
+    SEMICOLON_SYM  shift, and go to state 291
+    AND_SYM        shift, and go to state 140
+    OR_SYM         shift, and go to state 141
+    NEQ_SYM        shift, and go to state 142
+
+
+State 291
+
+   24 Optional_ConstDecl: CONST_SYM Optional_ConstDecls IDENT_SYM EQ_SYM ConstExpression SEMICOLON_SYM .
+   26 Optional_ConstDecls: Optional_ConstDecls IDENT_SYM EQ_SYM ConstExpression SEMICOLON_SYM .
+
+    IDENT_SYM  reduce using rule 26 (Optional_ConstDecls)
+    $default   reduce using rule 24 (Optional_ConstDecl)
